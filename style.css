@@ -88,9 +88,10 @@ html, body {
 }
 
 .header-logo {
-    width: 32px;
-    height: 42px;
-    object-fit: contain;
+    width: 36px;
+    height: 36px;
+    object-fit: cover;
+    border-radius: 50%;
 }
 
 .brand-text {
@@ -154,17 +155,21 @@ html, body {
 }
 
 .hero-crest-wrapper {
-    width: 110px;
-    height: 145px;
+    width: 130px;
+    height: 130px;
     margin: 0 auto 1.2rem;
     position: relative;
+    border-radius: 50%;
+    background: var(--white-pure);
+    padding: 4px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35), 0 0 0 3px rgba(255, 255, 255, 0.9);
 }
 
 .hero-crest {
     width: 100%;
     height: 100%;
-    object-fit: contain;
-    filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.4));
+    object-fit: cover;
+    border-radius: 50%;
 }
 
 .hero-title {
