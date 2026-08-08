@@ -671,6 +671,155 @@ html, body {
     resize: none;
 }
 
+/* Roster Form Styles */
+.rsvp-form-card {
+    border-top: 4px solid var(--navy-deep);
+}
+
+.form-title {
+    font-family: var(--font-heading);
+    color: var(--navy-deep);
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+}
+
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.form-group label {
+    display: block;
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--navy-deep);
+    margin-bottom: 0.4rem;
+}
+
+.mobile-select {
+    width: 100%;
+    padding: 0.75rem 0.9rem;
+    border-radius: var(--radius-md);
+    border: 1.5px solid var(--slate-border);
+    background-color: var(--white-bg);
+    color: var(--navy-deep);
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    font-weight: 600;
+    outline: none;
+}
+
+.mobile-select:focus {
+    border-color: var(--navy-deep);
+    background-color: var(--white-pure);
+}
+
+.rsvp-btn-row {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.rsvp-action-btn {
+    flex: 1;
+    padding: 0.75rem 0.3rem;
+    border-radius: 25px;
+    border: none;
+    font-size: 0.82rem;
+    font-weight: 800;
+    cursor: pointer;
+    transition: transform 0.15s ease;
+}
+
+.rsvp-action-btn:active {
+    transform: scale(0.96);
+}
+
+.btn-in { background: var(--green-win); color: var(--white-pure); }
+.btn-maybe { background: var(--gold-accent); color: var(--white-pure); }
+.btn-out { background: var(--red-loss); color: var(--white-pure); }
+
+.sync-msg {
+    font-size: 0.82rem;
+    font-weight: 600;
+    text-align: center;
+    margin-top: 0.6rem;
+}
+
+/* Live Roster Attendance List */
+.roster-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.8rem;
+}
+
+.roster-card-header h3 {
+    font-family: var(--font-heading);
+    color: var(--navy-deep);
+    font-size: 1.05rem;
+}
+
+.live-sync-tag {
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: #059669;
+    background: #E6F4EA;
+    padding: 0.2rem 0.6rem;
+    border-radius: 12px;
+}
+
+.attendance-summary-pills {
+    display: flex;
+    gap: 0.4rem;
+    margin-bottom: 1rem;
+}
+
+.summary-pill {
+    flex: 1;
+    text-align: center;
+    padding: 0.4rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 800;
+}
+
+.pill-in { background: #E6F4EA; color: var(--green-win); }
+.pill-maybe { background: #FEF3C7; color: var(--gold-accent); }
+.pill-out { background: #FCE8E6; color: var(--red-loss); }
+
+.roster-attendance-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+}
+
+.roster-player-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.6rem 0.8rem;
+    background: var(--white-bg);
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--slate-border);
+}
+
+.player-name-text {
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: var(--navy-deep);
+}
+
+.player-st-badge {
+    font-size: 0.75rem;
+    font-weight: 800;
+    padding: 0.2rem 0.6rem;
+    border-radius: 12px;
+}
+
+.player-st-badge.in { background: #E6F4EA; color: var(--green-win); }
+.player-st-badge.maybe { background: #FEF3C7; color: var(--gold-accent); }
+.player-st-badge.out { background: #FCE8E6; color: var(--red-loss); }
+.player-st-badge.pending { background: var(--slate-light); color: var(--slate-muted); }
+
 /* MOBILE BOTTOM APP NAVIGATION BAR (Pinned Bottom) */
 .app-bottom-nav {
     position: fixed;

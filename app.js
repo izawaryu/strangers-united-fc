@@ -1,10 +1,13 @@
-// Strangers United FC - Mobile Web App Logic
+// Strangers United FC - Mobile Web App Logic with Online Attendance Sync
+
+let onlineAttendanceData = {};
 
 document.addEventListener('DOMContentLoaded', () => {
     initMobileNavigation();
     renderMobileStandings();
     renderMobileSchedule();
-    renderMobileAttendanceTracker();
+    initRosterForm();
+    fetchOnlineAttendance();
     initIframeToggle();
 });
 
@@ -122,63 +125,196 @@ function renderMobileSchedule(filter = 'all') {
     });
 }
 
-// Render Mobile Attendance RSVP Cards
-function renderMobileAttendanceTracker() {
-    const container = document.getElementById('rsvp-matches-container');
-    if (!container) return;
+// Initialize Roster & Match Dropdowns
+function initRosterForm() {
+    const playerSelect = document.getElementById('player-dropdown');
+    const matchSelect = document.getElementById('match-dropdown');
 
-    const upcomingMatches = MATCHES_DATA.filter(m => m.status === 'Upcoming');
-    const rsvpData = JSON.parse(localStorage.getItem('strangers_fc_rsvp') || '{}');
+    if (playerSelect) {
+        playerSelect.innerHTML = '<option value="" disabled selected>-- Choose Your Name --</option>';
+        ROSTER_PLAYERS.forEach(player => {
+            const opt = document.createElement('option');
+            opt.value = player;
+            opt.textContent = player;
+            playerSelect.appendChild(opt);
+        });
+    }
+
+    if (matchSelect) {
+        matchSelect.innerHTML = '';
+        const upcoming = MATCHES_DATA.filter(m => m.status === 'Upcoming');
+        upcoming.forEach(match => {
+            const opt = document.createElement('option');
+            opt.value = match.id;
+            opt.textContent = `${match.date} vs ${match.away.includes('STRANGERS') ? match.home : match.away} (${match.time || 'TBD'})`;
+            matchSelect.appendChild(opt);
+        });
+
+        matchSelect.addEventListener('change', () => {
+            renderRosterAttendanceGrid();
+        });
+    }
+}
+
+// Fetch Shared Online Attendance Data
+async function fetchOnlineAttendance() {
+    try {
+        const response = await fetch(ATTENDANCE_API_URL);
+        if (response.ok) {
+            const json = await response.json();
+            onlineAttendanceData = json.attendance || {};
+            // Cache locally
+            localStorage.setItem('strangers_fc_online_rsvp', JSON.stringify(onlineAttendanceData));
+        } else {
+            fallbackLocalAttendance();
+        }
+    } catch (e) {
+        console.warn('Using cached attendance data:', e);
+        fallbackLocalAttendance();
+    }
+    renderRosterAttendanceGrid();
+}
+
+function fallbackLocalAttendance() {
+    onlineAttendanceData = JSON.parse(localStorage.getItem('strangers_fc_online_rsvp') || '{}');
+}
+
+// Submit Attendance to Shared Online Blob
+async function submitAttendance(status) {
+    const playerSelect = document.getElementById('player-dropdown');
+    const matchSelect = document.getElementById('match-dropdown');
+    const msgBox = document.getElementById('sync-status-msg');
+
+    const playerName = playerSelect ? playerSelect.value : '';
+    const matchId = matchSelect ? matchSelect.value : '';
+
+    if (!playerName) {
+        alert('Please select your name from the drop-down menu first!');
+        return;
+    }
+
+    if (!matchId) {
+        alert('Please select a match!');
+        return;
+    }
+
+    if (msgBox) {
+        msgBox.innerHTML = '<span style="color:#0284C7;">⏳ Saving online...</span>';
+    }
+
+    if (!onlineAttendanceData[matchId]) {
+        onlineAttendanceData[matchId] = {};
+    }
+    onlineAttendanceData[matchId][playerName] = status;
+
+    // Cache locally immediately
+    localStorage.setItem('strangers_fc_online_rsvp', JSON.stringify(onlineAttendanceData));
+    renderRosterAttendanceGrid();
+
+    // Push PUT update to JSONBlob
+    try {
+        const res = await fetch(ATTENDANCE_API_URL, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ attendance: onlineAttendanceData })
+        });
+
+        if (res.ok) {
+            if (msgBox) msgBox.innerHTML = '<span style="color:#059669;">✅ Saved online! Everyone can view your status.</span>';
+        } else {
+            if (msgBox) msgBox.innerHTML = '<span style="color:#D97706;">Saved locally. (Sync retry on refresh)</span>';
+        }
+    } catch (err) {
+        if (msgBox) msgBox.innerHTML = '<span style="color:#D97706;">Saved locally.</span>';
+    }
+
+    setTimeout(() => {
+        if (msgBox) msgBox.innerHTML = '';
+    }, 4000);
+}
+
+// Render Live Team Roster Grid & Counters
+function renderRosterAttendanceGrid() {
+    const container = document.getElementById('roster-attendance-list');
+    const matchSelect = document.getElementById('match-dropdown');
+    if (!container || !matchSelect) return;
+
+    const currentMatchId = matchSelect.value || (MATCHES_DATA.find(m => m.status === 'Upcoming') || {}).id;
+    const matchRsvp = onlineAttendanceData[currentMatchId] || {};
+
+    let inCount = 0;
+    let maybeCount = 0;
+    let outCount = 0;
 
     container.innerHTML = '';
 
-    upcomingMatches.forEach(match => {
-        const userStatus = rsvpData[match.id] || null;
+    ROSTER_PLAYERS.forEach(player => {
+        const st = matchRsvp[player] || 'PENDING';
 
-        const card = document.createElement('div');
-        card.className = 'rsvp-mobile-card';
-        card.innerHTML = `
-            <div class="rsvp-card-title">${match.home} vs ${match.away}</div>
-            <div class="rsvp-card-sub">📅 ${match.date} @ ${match.time || 'TBD'} • 📍 ${match.venue}</div>
-            <div class="rsvp-buttons">
-                <button class="r-btn in ${userStatus === 'IN' ? 'active' : ''}" onclick="setMobileRSVP(${match.id}, 'IN')">
-                    ✅ I'm Playing
-                </button>
-                <button class="r-btn maybe ${userStatus === 'MAYBE' ? 'active' : ''}" onclick="setMobileRSVP(${match.id}, 'MAYBE')">
-                    🤔 Maybe
-                </button>
-                <button class="r-btn out ${userStatus === 'OUT' ? 'active' : ''}" onclick="setMobileRSVP(${match.id}, 'OUT')">
-                    ❌ Out
-                </button>
-            </div>
+        if (st === 'IN') inCount++;
+        else if (st === 'MAYBE') maybeCount++;
+        else if (st === 'OUT') outCount++;
+
+        let badgeClass = 'pending';
+        let badgeText = '❓ Pending';
+
+        if (st === 'IN') { badgeClass = 'in'; badgeText = '✅ IN'; }
+        else if (st === 'MAYBE') { badgeClass = 'maybe'; badgeText = '🤔 MAYBE'; }
+        else if (st === 'OUT') { badgeClass = 'out'; badgeText = '❌ OUT'; }
+
+        const row = document.createElement('div');
+        row.className = 'roster-player-row';
+        row.innerHTML = `
+            <span class="player-name-text">${player}</span>
+            <span class="player-st-badge ${badgeClass}">${badgeText}</span>
         `;
-        container.appendChild(card);
+        container.appendChild(row);
     });
 
-    updateRSVPSummary();
+    // Update Counter Pills
+    const countIn = document.getElementById('count-in');
+    const countMaybe = document.getElementById('count-maybe');
+    const countOut = document.getElementById('count-out');
+
+    if (countIn) countIn.textContent = `${inCount} IN`;
+    if (countMaybe) countMaybe.textContent = `${maybeCount} MAYBE`;
+    if (countOut) countOut.textContent = `${outCount} OUT`;
+
+    updateRSVPSummaryText(currentMatchId);
 }
 
-window.setMobileRSVP = function(matchId, status) {
-    const rsvpData = JSON.parse(localStorage.getItem('strangers_fc_rsvp') || '{}');
-    rsvpData[matchId] = status;
-    localStorage.setItem('strangers_fc_rsvp', JSON.stringify(rsvpData));
-
-    renderMobileAttendanceTracker();
-};
-
-function updateRSVPSummary() {
-    const rsvpData = JSON.parse(localStorage.getItem('strangers_fc_rsvp') || '{}');
+// Format Roster Summary for WhatsApp
+function updateRSVPSummaryText(matchId) {
     const summaryBox = document.getElementById('rsvp-summary-box');
     if (!summaryBox) return;
 
-    const upcomingMatches = MATCHES_DATA.filter(m => m.status === 'Upcoming');
-    let text = `⚽ *Strangers United FC - Match RSVP*\n\n`;
+    const match = MATCHES_DATA.find(m => m.id == matchId) || {};
+    const matchRsvp = onlineAttendanceData[matchId] || {};
 
-    upcomingMatches.forEach(m => {
-        const st = rsvpData[m.id] || 'Not Selected';
-        const emoji = st === 'IN' ? '✅' : st === 'OUT' ? '❌' : st === 'MAYBE' ? '🤔' : '❓';
-        text += `• *${m.date} (${m.away})*: ${emoji} ${st}\n`;
+    let text = `⚽ *Strangers United FC - Match Attendance*\n`;
+    text += `📅 *${match.date} vs ${match.away.includes('STRANGERS') ? match.home : match.away} (${match.time || '8:00 PM'})*\n`;
+    text += `📍 *Field: ${match.venue || 'Capelli Complex'}*\n\n`;
+
+    let inList = [];
+    let maybeList = [];
+    let outList = [];
+    let pendingList = [];
+
+    ROSTER_PLAYERS.forEach(p => {
+        const st = matchRsvp[p];
+        if (st === 'IN') inList.push(p);
+        else if (st === 'MAYBE') maybeList.push(p);
+        else if (st === 'OUT') outList.push(p);
+        else pendingList.push(p);
     });
+
+    text += `✅ *IN (${inList.length})*: ${inList.join(', ') || 'None yet'}\n`;
+    text += `🤔 *MAYBE (${maybeList.length})*: ${maybeList.join(', ') || 'None'}\n`;
+    text += `❌ *OUT (${outList.length})*: ${outList.join(', ') || 'None'}\n`;
+
+    if (pendingList.length > 0) {
+        text += `❓ *PENDING (${pendingList.length})*: ${pendingList.join(', ')}\n`;
+    }
 
     summaryBox.value = text;
 }
@@ -189,7 +325,7 @@ window.copyRSVPSummary = function() {
 
     summaryBox.select();
     document.execCommand('copy');
-    alert('Match RSVP status copied to clipboard! Ready to paste into WhatsApp.');
+    alert('Roster attendance list copied to clipboard! Ready to paste into WhatsApp group chat.');
 };
 
 function initIframeToggle() {

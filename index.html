@@ -39,7 +39,7 @@
         <!-- SECTION 1: HOME (Predominantly White + Navy Uniform Block) -->
         <section id="home-section" class="app-section active">
             
-            <!-- Broad Navy Blue Uniform Header Banner -->
+            <!-- Broad Navy Blue Hero Banner -->
             <div class="navy-hero-banner">
                 <div class="hero-crest-wrapper">
                     <img src="assets/logo.png" alt="Strangers United FC" class="hero-crest">
@@ -78,11 +78,11 @@
                     </div>
 
                     <a href="#rsvp" class="app-btn btn-navy nav-tab-trigger" data-target="rsvp-section">
-                        ⚡ RSVP Availability
+                        ⚡ Mark Attendance
                     </a>
                 </div>
 
-                <!-- Uniform & Season Quick Overview -->
+                <!-- Season Quick Overview -->
                 <div class="card info-card">
                     <h3>2026 Season Overview</h3>
                     <div class="stats-row">
@@ -100,8 +100,6 @@
                         </div>
                     </div>
                 </div>
-
-
             </div>
         </section>
 
@@ -166,16 +164,73 @@
             </div>
         </section>
 
-        <!-- SECTION 4: ATTENDANCE RSVP -->
+        <!-- SECTION 4: PLAYER ROSTER ATTENDANCE (Online Persistence) -->
         <section id="rsvp-section" class="app-section">
             <div class="section-title-banner">
-                <h2>Match Attendance</h2>
-                <p>Player Availability Tracker</p>
+                <h2>Player Attendance</h2>
+                <p>Select your name & mark availability online</p>
             </div>
 
             <div class="white-container">
-                <div id="rsvp-matches-container" class="mobile-rsvp-feed">
-                    <!-- Populated dynamically via app.js -->
+                
+                <!-- RSVP Form Card -->
+                <div class="card rsvp-form-card">
+                    <h3 class="form-title">Update Your Status</h3>
+                    
+                    <!-- 1. Select Player Dropdown -->
+                    <div class="form-group">
+                        <label for="player-dropdown">1. Select Your Name:</label>
+                        <select id="player-dropdown" class="mobile-select">
+                            <option value="" disabled selected>-- Choose Name --</option>
+                            <!-- Populated dynamically from ROSTER_PLAYERS -->
+                        </select>
+                    </div>
+
+                    <!-- 2. Select Match Dropdown -->
+                    <div class="form-group">
+                        <label for="match-dropdown">2. Select Match:</label>
+                        <select id="match-dropdown" class="mobile-select">
+                            <!-- Populated dynamically -->
+                        </select>
+                    </div>
+
+                    <!-- 3. RSVP Action Buttons -->
+                    <div class="form-group">
+                        <label>3. Set Availability:</label>
+                        <div class="rsvp-btn-row">
+                            <button class="rsvp-action-btn btn-in" onclick="submitAttendance('IN')">
+                                ✅ Playing
+                            </button>
+                            <button class="rsvp-action-btn btn-maybe" onclick="submitAttendance('MAYBE')">
+                                🤔 Maybe
+                            </button>
+                            <button class="rsvp-action-btn btn-out" onclick="submitAttendance('OUT')">
+                                ❌ Out
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="sync-status-msg" class="sync-msg"></div>
+                </div>
+
+                <!-- Live Team Roster Attendance Grid -->
+                <div class="card live-roster-card">
+                    <div class="roster-card-header">
+                        <h3>Team Roster RSVP Status</h3>
+                        <span class="live-sync-tag">🔴 Live Online Sync</span>
+                    </div>
+
+                    <!-- Status Summary Pills -->
+                    <div class="attendance-summary-pills">
+                        <span class="summary-pill pill-in" id="count-in">0 IN</span>
+                        <span class="summary-pill pill-maybe" id="count-maybe">0 MAYBE</span>
+                        <span class="summary-pill pill-out" id="count-out">0 OUT</span>
+                    </div>
+
+                    <!-- Roster List -->
+                    <div id="roster-attendance-list" class="roster-attendance-grid">
+                        <!-- Populated dynamically -->
+                    </div>
                 </div>
 
                 <!-- WhatsApp Share Card -->
@@ -183,13 +238,13 @@
                     <div class="wa-header">
                         <span class="wa-icon">💬</span>
                         <div>
-                            <h4>Share in WhatsApp Group</h4>
-                            <p>Copy your RSVP list for team text chat</p>
+                            <h4>Share in Team WhatsApp</h4>
+                            <p>Copy formatted roster list for group chat</p>
                         </div>
                     </div>
-                    <textarea id="rsvp-summary-box" readonly class="mobile-textarea" rows="4"></textarea>
+                    <textarea id="rsvp-summary-box" readonly class="mobile-textarea" rows="5"></textarea>
                     <button onclick="copyRSVPSummary()" class="app-btn btn-whatsapp">
-                        📋 Copy Attendance Summary
+                        📋 Copy Attendance List
                     </button>
                 </div>
             </div>
@@ -219,6 +274,7 @@
 
     <!-- Scripts -->
     <script src="league_data.js"></script>
+    <script src="roster.js"></script>
     <script src="app.js"></script>
 </body>
 </html>
