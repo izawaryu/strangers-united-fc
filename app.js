@@ -1,37 +1,49 @@
-// Strangers United FC - Portal App Logic
+// Strangers United FC - Mobile Web App Logic
 
 document.addEventListener('DOMContentLoaded', () => {
-    initNavigation();
-    renderStandings();
-    renderSchedule();
-    renderAttendanceTracker();
+    initMobileNavigation();
+    renderMobileStandings();
+    renderMobileSchedule();
+    renderMobileAttendanceTracker();
     initIframeToggle();
 });
 
-// Navigation Tab Switcher
-function initNavigation() {
-    const navLinks = document.querySelectorAll('.nav-link');
-    const sections = document.querySelectorAll('.page-section');
+// Mobile Bottom Bar & Tab Navigation
+function initMobileNavigation() {
+    const navItems = document.querySelectorAll('.nav-item, .nav-tab-trigger');
+    const sections = document.querySelectorAll('.app-section');
 
-    navLinks.forEach(link => {
-        link.addEventListener('click', (e) => {
+    navItems.forEach(item => {
+        item.addEventListener('click', (e) => {
             e.preventDefault();
-            const targetId = link.getAttribute('data-target');
+            const targetId = item.getAttribute('data-target');
+            if (!targetId) return;
 
-            navLinks.forEach(l => l.classList.remove('active'));
+            // Sync active state on bottom nav bar
+            const bottomNavLinks = document.querySelectorAll('.app-bottom-nav .nav-item');
+            bottomNavLinks.forEach(link => {
+                if (link.getAttribute('data-target') === targetId) {
+                    link.classList.add('active');
+                } else {
+                    link.classList.remove('active');
+                }
+            });
+
+            // Switch section
             sections.forEach(s => s.classList.remove('active'));
+            const targetSection = document.getElementById(targetId);
+            if (targetSection) {
+                targetSection.classList.add('active');
+            }
 
-            link.classList.add('active');
-            document.getElementById(targetId).classList.add('active');
-
-            // Smooth scroll to section top on mobile
+            // Scroll to top
             window.scrollTo({ top: 0, behavior: 'smooth' });
         });
     });
 }
 
-// Render League Standings Table
-function renderStandings() {
+// Render Clean Mobile Standings Table
+function renderMobileStandings() {
     const tbody = document.getElementById('standings-tbody');
     if (!tbody) return;
 
@@ -44,25 +56,22 @@ function renderStandings() {
         }
 
         tr.innerHTML = `
-            <td class="rank-cell">${team.rank}</td>
-            <td class="team-name-cell">
-                ${team.team} ${team.isClub ? '<span class="club-badge">OUR CLUB</span>' : ''}
+            <td><strong>${team.rank}</strong></td>
+            <td>
+                ${team.team} ${team.isClub ? '⭐' : ''}
             </td>
             <td>${team.gp}</td>
             <td><span class="win">${team.w}</span></td>
             <td><span class="loss">${team.l}</span></td>
             <td><span class="tie">${team.t}</span></td>
-            <td>${team.gf}</td>
-            <td>${team.ga}</td>
-            <td class="${team.gd > 0 ? 'win' : team.gd < 0 ? 'loss' : ''}">${team.gd > 0 ? '+' + team.gd : team.gd}</td>
-            <td class="pts-cell">${team.pts}</td>
+            <td class="pts-val">${team.pts}</td>
         `;
         tbody.appendChild(tr);
     });
 }
 
-// Render Schedule & Results
-function renderSchedule(filter = 'all') {
+// Render Mobile Fixtures Feed
+function renderMobileSchedule(filter = 'all') {
     const container = document.getElementById('schedule-list');
     if (!container) return;
 
@@ -76,51 +85,45 @@ function renderSchedule(filter = 'all') {
 
     filteredMatches.forEach(match => {
         const card = document.createElement('div');
-        card.className = `match-card ${match.status.toLowerCase()}`;
+        card.className = 'fixture-card';
 
-        let resultBadge = '';
+        let badgeHtml = '';
         if (match.status === 'Completed') {
-            if (match.result === 'W') resultBadge = '<span class="result-badge win">WIN</span>';
-            else if (match.result === 'L') resultBadge = '<span class="result-badge loss">LOSS</span>';
-            else resultBadge = '<span class="result-badge draw">DRAW</span>';
+            if (match.result === 'W') badgeHtml = '<span class="badge-result win">WIN</span>';
+            else if (match.result === 'L') badgeHtml = '<span class="badge-result loss">LOSS</span>';
+            else badgeHtml = '<span class="badge-result draw">DRAW</span>';
         } else {
-            resultBadge = '<span class="result-badge upcoming">UPCOMING</span>';
+            badgeHtml = '<span class="badge-result upcoming">UPCOMING</span>';
         }
 
         card.innerHTML = `
-            <div class="match-header">
-                <span class="match-date">📅 ${match.date} ${match.time ? '• ' + match.time : ''}</span>
-                <span class="match-venue">📍 ${match.venue}</span>
-                ${resultBadge}
+            <div class="fixture-header">
+                <span>📅 ${match.date} ${match.time ? '• ' + match.time : ''}</span>
+                ${badgeHtml}
             </div>
-            <div class="match-teams">
-                <div class="team home ${match.home.includes('STRANGERS') ? 'club-team' : ''}">
-                    <span>${match.home}</span>
-                </div>
-                <div class="score-box">
-                    <span class="score-text">${match.score}</span>
-                </div>
-                <div class="team away ${match.away.includes('STRANGERS') ? 'club-team' : ''}">
-                    <span>${match.away}</span>
-                </div>
+            <div class="fixture-teams-row">
+                <span class="fixture-team ${match.home.includes('STRANGERS') ? 'is-club' : ''}">${match.home}</span>
+                <span class="fixture-score">${match.score}</span>
+                <span class="fixture-team ${match.away.includes('STRANGERS') ? 'is-club' : ''}" style="text-align: right;">${match.away}</span>
             </div>
+            <div class="fixture-venue">📍 ${match.venue}</div>
         `;
         container.appendChild(card);
     });
 
-    // Setup Filter Buttons
-    const filterBtns = document.querySelectorAll('.filter-btn');
-    filterBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-            filterBtns.forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            renderSchedule(btn.getAttribute('data-filter'));
+    // Mobile Filter Tabs
+    const filterPills = document.querySelectorAll('.filter-pill');
+    filterPills.forEach(pill => {
+        pill.addEventListener('click', () => {
+            filterPills.forEach(p => p.classList.remove('active'));
+            pill.classList.add('active');
+            renderMobileSchedule(pill.getAttribute('data-filter'));
         });
     });
 }
 
-// Member Attendance RSVP Tracker
-function renderAttendanceTracker() {
+// Render Mobile Attendance RSVP Cards
+function renderMobileAttendanceTracker() {
     const container = document.getElementById('rsvp-matches-container');
     if (!container) return;
 
@@ -130,42 +133,37 @@ function renderAttendanceTracker() {
     container.innerHTML = '';
 
     upcomingMatches.forEach(match => {
-        const userRsvp = rsvpData[match.id] || null;
+        const userStatus = rsvpData[match.id] || null;
 
         const card = document.createElement('div');
-        card.className = 'rsvp-card';
+        card.className = 'rsvp-mobile-card';
         card.innerHTML = `
-            <div class="rsvp-header">
-                <h3>${match.date} @ ${match.time || 'TBD'}</h3>
-                <span class="rsvp-venue">📍 ${match.venue}</span>
-            </div>
-            <div class="rsvp-versus">
-                <strong>${match.home}</strong> vs <strong>${match.away}</strong>
-            </div>
-            <div class="rsvp-actions" data-match-id="${match.id}">
-                <button class="rsvp-btn in ${userRsvp === 'IN' ? 'active' : ''}" onclick="setRSVP(${match.id}, 'IN')">
+            <div class="rsvp-card-title">${match.home} vs ${match.away}</div>
+            <div class="rsvp-card-sub">📅 ${match.date} @ ${match.time || 'TBD'} • 📍 ${match.venue}</div>
+            <div class="rsvp-buttons">
+                <button class="r-btn in ${userStatus === 'IN' ? 'active' : ''}" onclick="setMobileRSVP(${match.id}, 'IN')">
                     ✅ I'm Playing
                 </button>
-                <button class="rsvp-btn maybe ${userRsvp === 'MAYBE' ? 'active' : ''}" onclick="setRSVP(${match.id}, 'MAYBE')">
+                <button class="r-btn maybe ${userStatus === 'MAYBE' ? 'active' : ''}" onclick="setMobileRSVP(${match.id}, 'MAYBE')">
                     🤔 Maybe
                 </button>
-                <button class="rsvp-btn out ${userRsvp === 'OUT' ? 'active' : ''}" onclick="setRSVP(${match.id}, 'OUT')">
+                <button class="r-btn out ${userStatus === 'OUT' ? 'active' : ''}" onclick="setMobileRSVP(${match.id}, 'OUT')">
                     ❌ Out
                 </button>
             </div>
         `;
         container.appendChild(card);
     });
+
+    updateRSVPSummary();
 }
 
-// Global RSVP Status Function
-window.setRSVP = function(matchId, status) {
+window.setMobileRSVP = function(matchId, status) {
     const rsvpData = JSON.parse(localStorage.getItem('strangers_fc_rsvp') || '{}');
     rsvpData[matchId] = status;
     localStorage.setItem('strangers_fc_rsvp', JSON.stringify(rsvpData));
 
-    renderAttendanceTracker();
-    updateRSVPSummary();
+    renderMobileAttendanceTracker();
 };
 
 function updateRSVPSummary() {
@@ -174,28 +172,26 @@ function updateRSVPSummary() {
     if (!summaryBox) return;
 
     const upcomingMatches = MATCHES_DATA.filter(m => m.status === 'Upcoming');
-    let summaryText = `⚽ *Strangers United FC - Match Attendance*\n\n`;
+    let text = `⚽ *Strangers United FC - Match RSVP*\n\n`;
 
     upcomingMatches.forEach(m => {
         const st = rsvpData[m.id] || 'Not Selected';
         const emoji = st === 'IN' ? '✅' : st === 'OUT' ? '❌' : st === 'MAYBE' ? '🤔' : '❓';
-        summaryText += `• *${m.date} (${m.away})*: ${emoji} ${st}\n`;
+        text += `• *${m.date} (${m.away})*: ${emoji} ${st}\n`;
     });
 
-    summaryBox.value = summaryText;
+    summaryBox.value = text;
 }
 
-// Copy RSVP Summary to Clipboard for WhatsApp/Group Chat
 window.copyRSVPSummary = function() {
     const summaryBox = document.getElementById('rsvp-summary-box');
     if (!summaryBox) return;
 
     summaryBox.select();
     document.execCommand('copy');
-    alert('Match RSVP status copied to clipboard! You can now paste it into WhatsApp or team text chat.');
+    alert('Match RSVP status copied to clipboard! Ready to paste into WhatsApp.');
 };
 
-// EZFacility Direct Iframe Modal Toggle
 function initIframeToggle() {
     const toggleBtn = document.getElementById('toggle-ezfacility-btn');
     const iframeWrapper = document.getElementById('ezfacility-iframe-wrapper');
@@ -205,10 +201,10 @@ function initIframeToggle() {
             const isHidden = iframeWrapper.classList.contains('hidden');
             if (isHidden) {
                 iframeWrapper.classList.remove('hidden');
-                toggleBtn.innerText = 'Hide Official EZFacility Page';
+                toggleBtn.innerText = 'Hide EZFacility Page';
             } else {
                 iframeWrapper.classList.add('hidden');
-                toggleBtn.innerText = 'View Raw Official EZFacility Page';
+                toggleBtn.innerText = 'View EZFacility Official Page';
             }
         });
     }

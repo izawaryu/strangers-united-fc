@@ -2,176 +2,230 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Strangers United FC | Schedule, Standings & Attendance</title>
-    <meta name="description" content="Official website for Strangers United FC. View season schedule, league standings, and player match attendance tracking for Capelli Sport Over-40 League.">
-    <meta name="theme-color" content="#0a192f">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Strangers United FC | Club Portal</title>
+    <meta name="description" content="Official mobile web app for Strangers United FC. Match schedule, standings, and player RSVP attendance tracking.">
+    <meta name="theme-color" content="#ffffff">
     
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@600;700;800;900&display=swap" rel="stylesheet">
     
-    <!-- CSS Stylesheet -->
+    <!-- Mobile CSS Stylesheet -->
     <link rel="stylesheet" href="style.css">
 </head>
-<body>
-    <!-- Background Glow & Pitch Lines -->
-    <div class="glow-bg glow-bg-1"></div>
-    <div class="glow-bg glow-bg-2"></div>
-    <div class="pitch-lines"></div>
+<body class="mobile-app">
 
-    <div class="page-wrapper">
-        <!-- Navigation Bar -->
-        <header class="navbar">
-            <div class="nav-container">
-                <div class="brand">
-                    <img src="assets/logo.png" alt="Strangers United FC Crest" class="brand-logo">
-                    <span class="brand-name">STRANGERS UNITED FC</span>
+    <!-- Mobile Top Header -->
+    <header class="app-header">
+        <div class="header-content">
+            <div class="brand">
+                <img src="assets/logo.png" alt="Strangers United FC Crest" class="header-logo">
+                <div class="brand-text">
+                    <span class="brand-name">STRANGERS UNITED</span>
+                    <span class="brand-sub">Over-40 Capelli League</span>
                 </div>
-                
-                <!-- Nav Tabs -->
-                <nav class="nav-menu">
-                    <a href="#home" class="nav-link active" data-target="home-section">Home</a>
-                    <a href="#schedule" class="nav-link" data-target="schedule-section">Schedule</a>
-                    <a href="#standings" class="nav-link" data-target="standings-section">Standings</a>
-                    <a href="#rsvp" class="nav-link" data-target="rsvp-section">Attendance</a>
-                </nav>
             </div>
-        </header>
+            <a href="https://gaacomplextintonfalls.ezleagues.ezfacility.com/leagues/478430/CSX-Summer-Men-40-Champions-IV-2026.aspx" target="_blank" rel="noopener" class="header-ez-btn" title="Open Official EZFacility">
+                EZ ↗
+            </a>
+        </div>
+    </header>
 
-        <!-- MAIN SECTIONS CONTAINER -->
-        <main class="main-content">
+    <!-- Main Mobile Content Area -->
+    <main class="app-main">
+        
+        <!-- SECTION 1: HOME (Predominantly White + Navy Uniform Block) -->
+        <section id="home-section" class="app-section active">
             
-            <!-- 1. HOME / HERO SECTION -->
-            <section id="home-section" class="page-section active">
-                <div class="hero-card">
-                    <div class="logo-container">
-                        <div class="logo-ring"></div>
-                        <img src="assets/logo.png" alt="Strangers United FC Crest" class="hero-logo">
+            <!-- Broad Navy Blue Uniform Header Banner -->
+            <div class="navy-hero-banner">
+                <div class="hero-crest-wrapper">
+                    <img src="assets/logo.png" alt="Strangers United FC" class="hero-crest">
+                </div>
+                <h1 class="hero-title">STRANGERS UNITED FC</h1>
+                <p class="hero-sub">Tinton Falls, NJ • 8 v 8 Division</p>
+                <div class="jersey-stripe-accent"></div>
+            </div>
+
+            <!-- Crisp White Content Cards -->
+            <div class="white-container">
+                <!-- Next Match Spotlight -->
+                <div class="card next-match-card">
+                    <div class="card-badge">NEXT MATCH</div>
+                    <div class="match-vs-header">
+                        <div class="vs-team">
+                            <span class="vs-label">HOME</span>
+                            <strong class="vs-name">PUEBLA FC</strong>
+                        </div>
+                        <div class="vs-circle">VS</div>
+                        <div class="vs-team club-highlight">
+                            <span class="vs-label">AWAY</span>
+                            <strong class="vs-name">STRANGERS UTD</strong>
+                        </div>
                     </div>
-
-                    <h1 class="club-title">STRANGERS UNITED FC</h1>
-                    <p class="club-subtitle">CSX Summer Men 40+ Champions IV League</p>
-                    <p class="venue-subtitle">📍 Capelli Sport Complex • Tinton Falls, NJ</p>
-
-                    <div class="navy-divider"></div>
-
-                    <!-- Upcoming Match Banner -->
-                    <div class="upcoming-spotlight">
-                        <div class="spotlight-tag">NEXT MATCH</div>
-                        <h2>Puebla FC vs Strangers United</h2>
-                        <p class="match-time-loc">📅 Thursday, Aug 13 @ 8:00 PM • Wayside 6AB</p>
-                        <div class="spotlight-actions">
-                            <a href="#rsvp" class="btn btn-primary nav-link" data-target="rsvp-section">Set Your Attendance</a>
-                            <a href="#schedule" class="btn btn-secondary nav-link" data-target="schedule-section">View All Fixtures</a>
+                    
+                    <div class="match-details-grid">
+                        <div class="detail-item">
+                            <span class="icon">📅</span>
+                            <span>Thu, Aug 13 @ 8:00 PM</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="icon">📍</span>
+                            <span>Field: Wayside 6AB</span>
                         </div>
                     </div>
 
-                    <!-- External League Link -->
-                    <div class="league-source-card">
-                        <p>League Host: <strong>Capelli Sport Complex (EZFacility)</strong></p>
-                        <a href="https://gaacomplextintonfalls.ezleagues.ezfacility.com/leagues/478430/CSX-Summer-Men-40-Champions-IV-2026.aspx" target="_blank" rel="noopener" class="external-link">
-                            🔗 Open Official Capelli EZFacility Page ↗
-                        </a>
-                    </div>
+                    <a href="#rsvp" class="app-btn btn-navy nav-tab-trigger" data-target="rsvp-section">
+                        ⚡ RSVP Availability
+                    </a>
                 </div>
-            </section>
 
-            <!-- 2. SCHEDULE & RESULTS SECTION -->
-            <section id="schedule-section" class="page-section">
-                <div class="section-card">
-                    <div class="section-header">
-                        <h2>Season Fixtures & Results</h2>
-                        <p>CSX Summer Men 40+ Champions IV 2026</p>
-                    </div>
-
-                    <!-- Schedule Filter Buttons -->
-                    <div class="filter-bar">
-                        <button class="filter-btn active" data-filter="all">All Matches</button>
-                        <button class="filter-btn" data-filter="upcoming">Upcoming</button>
-                        <button class="filter-btn" data-filter="completed">Completed</button>
-                    </div>
-
-                    <!-- Schedule Cards Container -->
-                    <div id="schedule-list" class="schedule-grid">
-                        <!-- Populated dynamically via app.js -->
-                    </div>
-                </div>
-            </section>
-
-            <!-- 3. LEAGUE STANDINGS SECTION -->
-            <section id="standings-section" class="page-section">
-                <div class="section-card">
-                    <div class="section-header">
-                        <h2>League Standings</h2>
-                        <p>Capelli Sport Complex • Men's Over 40</p>
-                    </div>
-
-                    <!-- Standings Table -->
-                    <div class="table-responsive">
-                        <table class="standings-table">
-                            <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>Team</th>
-                                    <th>GP</th>
-                                    <th>W</th>
-                                    <th>L</th>
-                                    <th>T</th>
-                                    <th>GF</th>
-                                    <th>GA</th>
-                                    <th>GD</th>
-                                    <th>PTS</th>
-                                </tr>
-                            </thead>
-                            <tbody id="standings-tbody">
-                                <!-- Populated dynamically via app.js -->
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <!-- Embedded Official EZFacility Toggle -->
-                    <div class="iframe-container-section">
-                        <button id="toggle-ezfacility-btn" class="btn btn-secondary">View Raw Official EZFacility Page</button>
-                        <div id="ezfacility-iframe-wrapper" class="iframe-wrapper hidden">
-                            <iframe src="https://gaacomplextintonfalls.ezleagues.ezfacility.com/leagues/478430/CSX-Summer-Men-40-Champions-IV-2026.aspx" title="Official Capelli EZFacility Standings" class="ez-iframe"></iframe>
+                <!-- Uniform & Season Quick Overview -->
+                <div class="card info-card">
+                    <h3>2026 Season Overview</h3>
+                    <div class="stats-row">
+                        <div class="stat-box">
+                            <span class="stat-val">5th</span>
+                            <span class="stat-lbl">Rank</span>
+                        </div>
+                        <div class="stat-box">
+                            <span class="stat-val">7</span>
+                            <span class="stat-lbl">Matches</span>
+                        </div>
+                        <div class="stat-box">
+                            <span class="stat-val">7 pts</span>
+                            <span class="stat-lbl">Points</span>
                         </div>
                     </div>
                 </div>
-            </section>
 
-            <!-- 4. MATCH ATTENDANCE TRACKER SECTION -->
-            <section id="rsvp-section" class="page-section">
-                <div class="section-card">
-                    <div class="section-header">
-                        <h2>Player Attendance Tracker</h2>
-                        <p>Mark your match availability for team planning</p>
+                <!-- Uniform Preview Card -->
+                <div class="card uniform-card">
+                    <div class="uniform-header">
+                        <span class="uniform-icon">👕</span>
+                        <div>
+                            <h4>Official Team Colors</h4>
+                            <p>White & Navy Blue Kit</p>
+                        </div>
                     </div>
+                    <img src="assets/uniform.png" alt="Strangers United Official Uniform" class="uniform-img">
+                </div>
+            </div>
+        </section>
 
-                    <!-- RSVP Match Cards -->
-                    <div id="rsvp-matches-container" class="rsvp-grid">
-                        <!-- Populated dynamically via app.js -->
-                    </div>
+        <!-- SECTION 2: SCHEDULE (Mobile Card Feed) -->
+        <section id="schedule-section" class="app-section">
+            <div class="section-title-banner">
+                <h2>Match Schedule</h2>
+                <p>CSX Summer Men 40+ League</p>
+            </div>
 
-                    <!-- Team Chat Share Summary -->
-                    <div class="rsvp-summary-card">
-                        <h3>📱 Share Status in Team Group Chat</h3>
-                        <p>Copy your RSVP availability status and paste it into WhatsApp or iMessage:</p>
-                        <textarea id="rsvp-summary-box" readonly class="summary-textarea" rows="4"></textarea>
-                        <button onclick="copyRSVPSummary()" class="btn btn-primary">Copy Attendance to Clipboard</button>
+            <div class="white-container">
+                <!-- Mobile Filter Tabs -->
+                <div class="mobile-filter-bar">
+                    <button class="filter-pill active" data-filter="all">All</button>
+                    <button class="filter-pill" data-filter="upcoming">Upcoming</button>
+                    <button class="filter-pill" data-filter="completed">Completed</button>
+                </div>
+
+                <!-- Fixtures List -->
+                <div id="schedule-list" class="mobile-fixtures-feed">
+                    <!-- Populated dynamically via app.js -->
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 3: STANDINGS (Mobile Clean Table) -->
+        <section id="standings-section" class="app-section">
+            <div class="section-title-banner">
+                <h2>League Standings</h2>
+                <p>Capelli Sport Complex • Over-40</p>
+            </div>
+
+            <div class="white-container">
+                <div class="table-scroll-wrapper">
+                    <table class="mobile-table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Team</th>
+                                <th>GP</th>
+                                <th>W</th>
+                                <th>L</th>
+                                <th>T</th>
+                                <th>PTS</th>
+                            </tr>
+                        </thead>
+                        <tbody id="standings-tbody">
+                            <!-- Populated dynamically via app.js -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- EZFacility External Toggle -->
+                <div class="ez-toggle-card">
+                    <button id="toggle-ezfacility-btn" class="app-btn btn-outline">
+                        View EZFacility Official Page
+                    </button>
+                    <div id="ezfacility-iframe-wrapper" class="iframe-wrapper hidden">
+                        <iframe src="https://gaacomplextintonfalls.ezleagues.ezfacility.com/leagues/478430/CSX-Summer-Men-40-Champions-IV-2026.aspx" title="Capelli EZFacility Standings" class="mobile-iframe"></iframe>
                     </div>
                 </div>
-            </section>
+            </div>
+        </section>
 
-        </main>
+        <!-- SECTION 4: ATTENDANCE RSVP -->
+        <section id="rsvp-section" class="app-section">
+            <div class="section-title-banner">
+                <h2>Match Attendance</h2>
+                <p>Player Availability Tracker</p>
+            </div>
 
-        <!-- Footer -->
-        <footer class="footer">
-            <p>&copy; 2026 Strangers United FC. All rights reserved.</p>
-            <p class="footer-sub">Capelli Sport Complex Over-40 League Hub</p>
-        </footer>
-    </div>
+            <div class="white-container">
+                <div id="rsvp-matches-container" class="mobile-rsvp-feed">
+                    <!-- Populated dynamically via app.js -->
+                </div>
+
+                <!-- WhatsApp Share Card -->
+                <div class="card whatsapp-share-card">
+                    <div class="wa-header">
+                        <span class="wa-icon">💬</span>
+                        <div>
+                            <h4>Share in WhatsApp Group</h4>
+                            <p>Copy your RSVP list for team text chat</p>
+                        </div>
+                    </div>
+                    <textarea id="rsvp-summary-box" readonly class="mobile-textarea" rows="4"></textarea>
+                    <button onclick="copyRSVPSummary()" class="app-btn btn-whatsapp">
+                        📋 Copy Attendance Summary
+                    </button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Mobile Bottom App Bar -->
+    <nav class="app-bottom-nav">
+        <a href="#home" class="nav-item active" data-target="home-section">
+            <svg class="nav-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+            <span>Home</span>
+        </a>
+        <a href="#schedule" class="nav-item" data-target="schedule-section">
+            <svg class="nav-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+            <span>Schedule</span>
+        </a>
+        <a href="#standings" class="nav-item" data-target="standings-section">
+            <svg class="nav-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+            <span>Standings</span>
+        </a>
+        <a href="#rsvp" class="nav-item" data-target="rsvp-section">
+            <svg class="nav-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+            <span>Attendance</span>
+        </a>
+    </nav>
 
     <!-- Scripts -->
     <script src="league_data.js"></script>
