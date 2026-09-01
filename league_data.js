@@ -7,12 +7,12 @@ const LEAGUE_INFO = {
 };
 
 const STANDINGS_DATA = [
-    { rank: 1, team: "OCEAN ALUMNI FC", gp: 7, w: 5, l: 0, t: 2, gf: 44, ga: 21, pts: 17, gd: 23, isClub: false },
-    { rank: 2, team: "PUEBLA FC", gp: 7, w: 5, l: 2, t: 0, gf: 46, ga: 33, pts: 15, gd: 13, isClub: false },
-    { rank: 3, team: "OUT OF SHAPE ALL STARS", gp: 7, w: 3, l: 4, t: 0, gf: 36, ga: 36, pts: 9, gd: 0, isClub: false },
-    { rank: 4, team: "CASUAL WRECKS", gp: 7, w: 2, l: 4, t: 1, gf: 41, ga: 47, pts: 7, gd: -6, isClub: false },
-    { rank: 5, team: "STRANGERS UNITED", gp: 7, w: 2, l: 4, t: 1, gf: 18, ga: 27, pts: 7, gd: -9, isClub: true },
-    { rank: 6, team: "UNDRAFTED FC", gp: 7, w: 2, l: 5, t: 0, gf: 31, ga: 52, pts: 6, gd: -21, isClub: false }
+    { rank: 1, team: "PUEBLA FC", gp: 9, w: 8, l: 1, t: 0, gf: 60, ga: 31, pts: 24, gd: 29, isClub: false },
+    { rank: 2, team: "OCEAN ALUMNI FC", gp: 8, w: 5, l: 1, t: 2, gf: 48, ga: 27, pts: 17, gd: 21, isClub: false },
+    { rank: 3, team: "OUT OF SHAPE ALL STARS", gp: 9, w: 4, l: 5, t: 0, gf: 45, ga: 44, pts: 12, gd: 1, isClub: false },
+    { rank: 4, team: "CASUAL WRECKS", gp: 8, w: 2, l: 5, t: 1, gf: 42, ga: 49, pts: 7, gd: -7, isClub: false },
+    { rank: 5, team: "STRANGERS UNITED", gp: 8, w: 2, l: 5, t: 1, gf: 20, ga: 30, pts: 7, gd: -10, isClub: true },
+    { rank: 6, team: "UNDRAFTED FC", gp: 8, w: 2, l: 6, t: 0, gf: 26, ga: 60, pts: 6, gd: -34, isClub: false }
 ];
 
 const MATCHES_DATA = [
@@ -99,34 +99,34 @@ const MATCHES_DATA = [
         time: "8:00 PM",
         home: "PUEBLA FC",
         away: "STRANGERS UNITED",
-        score: "vs",
-        status: "Upcoming",
-        venue: "Wayside 6AB",
+        score: "3 - 2",
+        status: "Completed",
+        venue: "Wayside 3AB",
         isClubMatch: true,
-        result: "Upcoming"
+        result: "L"
     },
     {
         id: 9,
         date: "Thu, Aug 20",
         time: "8:00 PM / 9:00 PM",
-        home: "TBD (Playoffs)",
-        away: "TBD (Playoffs)",
-        score: "vs",
-        status: "Upcoming",
-        venue: "Wayside 6CD / 6AB",
-        isClubMatch: true,
-        result: "Upcoming"
+        home: "PUEBLA FC",
+        away: "CASUAL WRECKS",
+        score: "10 - 6",
+        status: "Completed",
+        venue: "Indoor 3AB (Playoffs)",
+        isClubMatch: false,
+        result: "Completed"
     },
     {
         id: 10,
         date: "Thu, Aug 27",
         time: "9:00 PM",
-        home: "TBD (Championship)",
-        away: "TBD (Championship)",
-        score: "vs",
-        status: "Upcoming",
-        venue: "Wayside 6AB",
-        isClubMatch: true,
-        result: "Upcoming"
+        home: "PUEBLA FC",
+        away: "OUT OF SHAPE ALL STARS",
+        score: "4 - 3",
+        status: "Completed",
+        venue: "Indoor 3AB (Championship)",
+        isClubMatch: false,
+        result: "Completed"
     }
 ];

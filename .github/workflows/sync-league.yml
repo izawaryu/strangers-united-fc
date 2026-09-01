@@ -1,0 +1,31 @@
+name: Auto Sync League Schedule & Standings
+
+on:
+  schedule:
+    - cron: '0 */6 * * *'  # Runs every 6 hours automatically
+  workflow_dispatch:        # Allows manual trigger button in GitHub Actions
+
+jobs:
+  sync-league:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Run EZFacility League Sync Script
+        run: python scripts/sync_ezfacility.py
+
+      - name: Commit & Push Updated Data
+        run: |
+          git config --global user.name "GitHub Action Bot"
+          git config --global user.email "actions@github.com"
+          git add league_data.js
+          git diff-index --quiet HEAD || git commit -m "Auto-sync live league schedule & standings from Capelli EZFacility"
+          git push
