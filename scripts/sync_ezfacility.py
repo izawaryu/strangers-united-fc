@@ -3,19 +3,17 @@ import re
 import json
 import os
 
-URL = "https://gaacomplextintonfalls.ezleagues.ezfacility.com/leagues/478430/CSX-Summer-Men-40-Champions-IV-2026.aspx"
+URL = "https://gaacomplextintonfalls.ezleagues.ezfacility.com/leagues/480009/CSX-Fall-Men-40-IV-2026.aspx"
 
 def fetch_and_sync():
     req = urllib.request.Request(URL, headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"})
     try:
         with urllib.request.urlopen(req) as resp:
             html = resp.read().decode('utf-8', errors='ignore')
-            print("Successfully fetched live Capelli EZFacility page!")
+            print("Successfully fetched live CSX Fall Men 40+ IV 2026 Capelli EZFacility page!")
             
-            # Simple check if data is valid
             if "STRANGERS" in html:
-                print("Strangers United FC found in live league data.")
-                # We can write updated static JSON or JS if needed
+                print("Strangers United FC found in live Fall 2026 league data.")
     except Exception as e:
         print("Sync error:", e)
 
