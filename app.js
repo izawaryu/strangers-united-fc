@@ -4,12 +4,66 @@ let onlineAttendanceData = {};
 
 document.addEventListener('DOMContentLoaded', () => {
     initMobileNavigation();
+    renderNextMatchSpotlight();
     renderMobileStandings();
     renderMobileSchedule();
     initRosterForm();
     fetchOnlineAttendance();
     initIframeToggle();
 });
+
+// Dynamic Next Match Spotlight on Home Screen
+function renderNextMatchSpotlight() {
+    const container = document.getElementById('next-match-spotlight-container');
+    if (!container) return;
+
+    const nextMatch = MATCHES_DATA.find(m => m.status === 'Upcoming');
+
+    if (!nextMatch) {
+        container.innerHTML = `
+            <div class="card next-match-card">
+                <div class="card-badge">SEASON COMPLETE</div>
+                <h3 style="font-family:var(--font-heading); color:var(--navy-deep); margin-top:0.4rem;">All Season Matches Completed!</h3>
+                <p style="font-size:0.85rem; color:var(--slate-muted); margin-top:0.4rem;">Check the standings & schedule tab for full results.</p>
+            </div>
+        `;
+        return;
+    }
+
+    container.innerHTML = `
+        <div class="card next-match-card">
+            <div class="card-badge">NEXT MATCH</div>
+            <div class="match-vs-header">
+                <div class="vs-team ${nextMatch.home.includes('STRANGERS') ? 'club-highlight' : ''}">
+                    <span class="vs-label">HOME</span>
+                    <strong class="vs-name">${nextMatch.home}</strong>
+                </div>
+                <div class="vs-circle">VS</div>
+                <div class="vs-team ${nextMatch.away.includes('STRANGERS') ? 'club-highlight' : ''}">
+                    <span class="vs-label">AWAY</span>
+                    <strong class="vs-name">${nextMatch.away}</strong>
+                </div>
+            </div>
+            
+            <div class="match-details-grid">
+                <div class="detail-item">
+                    <span class="icon">📅</span>
+                    <span>${nextMatch.date} ${nextMatch.time ? '@ ' + nextMatch.time : ''}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="icon">📍</span>
+                    <span>Field: ${nextMatch.venue || 'Capelli Complex'}</span>
+                </div>
+            </div>
+
+            <a href="#rsvp" class="app-btn btn-navy nav-tab-trigger" data-target="rsvp-section">
+                ⚡ Mark Attendance
+            </a>
+        </div>
+    `;
+
+    initMobileNavigation();
+}
 
 // Mobile Bottom Bar & Tab Navigation
 function initMobileNavigation() {
