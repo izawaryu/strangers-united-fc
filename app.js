@@ -339,7 +339,7 @@ function renderRosterAttendanceGrid() {
 
 // Format Roster Summary for WhatsApp according to user specifications:
 // 1. No emojis
-// 2. Poll text: <time>, <date> vs. <opponent>\n<field>
+// 2. Poll text: <date> vs. <opponent>\n<time>\n<field>
 // 3. Poll options: "In" or "Out"
 // 4. No text after the poll
 function updateRSVPSummaryText(matchId) {
@@ -354,7 +354,7 @@ function updateRSVPSummaryText(matchId) {
     const dateStr = match.date || 'Upcoming';
     const venueStr = match.venue || 'Capelli Complex';
 
-    let text = `${timeStr}, ${dateStr} vs. ${opponent}\n${venueStr}\n\n`;
+    let text = `${dateStr} vs. ${opponent}\n${timeStr}\n${venueStr}\n\n`;
 
     let inList = [];
     let outList = [];
