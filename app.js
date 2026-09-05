@@ -55,10 +55,6 @@ function renderNextMatchSpotlight() {
                     <span>Field: ${nextMatch.venue || 'Capelli Complex'}</span>
                 </div>
             </div>
-
-            <a href="#rsvp" class="app-btn btn-navy nav-tab-trigger" data-target="rsvp-section">
-                ⚡ Mark Attendance
-            </a>
         </div>
     `;
 

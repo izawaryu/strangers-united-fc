@@ -124,97 +124,6 @@
             </div>
         </section>
 
-        <!-- SECTION 4: PLAYER ROSTER ATTENDANCE (Online Persistence) -->
-        <section id="rsvp-section" class="app-section">
-            <div class="section-title-banner">
-                <h2>Player Attendance</h2>
-                <p>CSX Fall 2026 Season • Mark availability online</p>
-            </div>
-
-            <div class="white-container">
-                
-                <!-- RSVP Form Card -->
-                <div class="card rsvp-form-card">
-                    <h3 class="form-title">Update Your Status</h3>
-                    
-                    <!-- 1. Select Player Dropdown -->
-                    <div class="form-group">
-                        <label for="player-dropdown">1. Select Your Name:</label>
-                        <select id="player-dropdown" class="mobile-select">
-                            <option value="" disabled selected>-- Choose Name --</option>
-                            <!-- Populated dynamically from ROSTER_PLAYERS -->
-                        </select>
-                    </div>
-
-                    <!-- 2. Select Match Dropdown -->
-                    <div class="form-group">
-                        <label for="match-dropdown">2. Select Match:</label>
-                        <select id="match-dropdown" class="mobile-select">
-                            <!-- Populated dynamically -->
-                        </select>
-                    </div>
-
-                    <!-- 3. RSVP Action Buttons -->
-                    <div class="form-group">
-                        <label>3. Set Availability:</label>
-                        <div class="rsvp-btn-row">
-                            <button class="rsvp-action-btn btn-in" onclick="submitAttendance('IN')">
-                                ✅ Playing
-                            </button>
-                            <button class="rsvp-action-btn btn-maybe" onclick="submitAttendance('MAYBE')">
-                                🤔 Maybe
-                            </button>
-                            <button class="rsvp-action-btn btn-out" onclick="submitAttendance('OUT')">
-                                ❌ Out
-                            </button>
-                        </div>
-                    </div>
-
-                    <div id="sync-status-msg" class="sync-msg"></div>
-                </div>
-
-                <!-- Live Team Roster Attendance Grid -->
-                <div class="card live-roster-card">
-                    <div class="roster-card-header">
-                        <h3>Team Roster RSVP Status</h3>
-                        <span class="live-sync-tag">🔴 Live Online Sync</span>
-                    </div>
-
-                    <!-- Status Summary Pills -->
-                    <div class="attendance-summary-pills">
-                        <span class="summary-pill pill-in" id="count-in">0 IN</span>
-                        <span class="summary-pill pill-maybe" id="count-maybe">0 MAYBE</span>
-                        <span class="summary-pill pill-out" id="count-out">0 OUT</span>
-                    </div>
-
-                    <!-- Roster List -->
-                    <div id="roster-attendance-list" class="roster-attendance-grid">
-                        <!-- Populated dynamically -->
-                    </div>
-                </div>
-
-                <!-- WhatsApp Share Card -->
-                <div class="card whatsapp-share-card">
-                    <div class="wa-header">
-                        <span class="wa-icon">💬</span>
-                        <div>
-                            <h4>Share Poll in WhatsApp</h4>
-                            <p>Formatted match poll ready for team chat</p>
-                        </div>
-                    </div>
-                    <textarea id="rsvp-summary-box" readonly class="mobile-textarea" rows="7"></textarea>
-                    <div class="wa-btn-row">
-                        <button onclick="copyRSVPSummary()" class="app-btn btn-whatsapp">
-                            📋 Copy Poll Text
-                        </button>
-                        <button onclick="shareToWhatsApp()" class="app-btn btn-whatsapp-direct">
-                            📲 Open WhatsApp
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </section>
-
     </main>
 
     <!-- Mobile Bottom App Bar -->
@@ -231,15 +140,11 @@
             <svg class="nav-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
             <span>Standings</span>
         </a>
-        <a href="#rsvp" class="nav-item" data-target="rsvp-section">
-            <svg class="nav-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
-            <span>Attendance</span>
-        </a>
     </nav>
 
     <!-- Scripts -->
-    <script src="league_data.js?v=fall2026_v9"></script>
-    <script src="roster.js?v=fall2026_v9"></script>
-    <script src="app.js?v=fall2026_v9"></script>
+    <script src="league_data.js?v=fall2026_v10"></script>
+    <script src="roster.js?v=fall2026_v10"></script>
+    <script src="app.js?v=fall2026_v10"></script>
 </body>
 </html>
