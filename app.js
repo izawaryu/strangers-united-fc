@@ -337,7 +337,7 @@ function renderRosterAttendanceGrid() {
     updateRSVPSummaryText(currentMatchId);
 }
 
-// Format Roster Summary for WhatsApp
+// Format Roster Summary for WhatsApp Poll Style
 function updateRSVPSummaryText(matchId) {
     const summaryBox = document.getElementById('rsvp-summary-box');
     if (!summaryBox) return;
@@ -345,8 +345,11 @@ function updateRSVPSummaryText(matchId) {
     const match = MATCHES_DATA.find(m => m.id == matchId) || {};
     const matchRsvp = onlineAttendanceData[matchId] || {};
 
-    let text = `⚽ *Strangers United FC - Match Attendance*\n`;
-    text += `📅 *${match.date} vs ${match.away.includes('STRANGERS') ? match.home : match.away} (${match.time || '8:00 PM'})*\n`;
+    const opponent = match.away ? (match.away.includes('STRANGERS') ? match.home : match.away) : 'TBD';
+
+    let text = `📊 *MATCH POLL: ATTENDANCE*\n`;
+    text += `⚽ *STRANGERS UNITED vs ${opponent}*\n`;
+    text += `📅 *${match.date || 'Upcoming'} ${match.time ? '@ ' + match.time : ''}*\n`;
     text += `📍 *Field: ${match.venue || 'Capelli Complex'}*\n\n`;
 
     let inList = [];
@@ -362,13 +365,33 @@ function updateRSVPSummaryText(matchId) {
         else pendingList.push(p);
     });
 
-    text += `✅ *IN (${inList.length})*: ${inList.join(', ') || 'None yet'}\n`;
-    text += `🤔 *MAYBE (${maybeList.length})*: ${maybeList.join(', ') || 'None'}\n`;
-    text += `❌ *OUT (${outList.length})*: ${outList.join(', ') || 'None'}\n`;
+    text += `1️⃣ *IN / PLAYING (${inList.length})*\n`;
+    if (inList.length > 0) {
+        text += inList.map(p => `• ${p}`).join('\n') + `\n\n`;
+    } else {
+        text += `• _(No votes yet)_\n\n`;
+    }
+
+    text += `2️⃣ *MAYBE (${maybeList.length})*\n`;
+    if (maybeList.length > 0) {
+        text += maybeList.map(p => `• ${p}`).join('\n') + `\n\n`;
+    } else {
+        text += `• _(None)_\n\n`;
+    }
+
+    text += `3️⃣ *OUT (${outList.length})*\n`;
+    if (outList.length > 0) {
+        text += outList.map(p => `• ${p}`).join('\n') + `\n\n`;
+    } else {
+        text += `• _(None)_\n\n`;
+    }
 
     if (pendingList.length > 0) {
-        text += `❓ *PENDING (${pendingList.length})*: ${pendingList.join(', ')}\n`;
+        text += `4️⃣ *UNVOTED / PENDING (${pendingList.length})*\n`;
+        text += pendingList.map(p => `• ${p}`).join('\n') + `\n\n`;
     }
+
+    text += `📲 *Update your vote on our team site:*\nhttps://strangers-united.com/#rsvp`;
 
     summaryBox.value = text;
 }
@@ -379,7 +402,15 @@ window.copyRSVPSummary = function() {
 
     summaryBox.select();
     document.execCommand('copy');
-    alert('Roster attendance list copied to clipboard! Ready to paste into WhatsApp group chat.');
+    alert('WhatsApp Poll copied to clipboard! Ready to paste into your team chat.');
+};
+
+window.shareToWhatsApp = function() {
+    const summaryBox = document.getElementById('rsvp-summary-box');
+    if (!summaryBox || !summaryBox.value) return;
+
+    const encodedText = encodeURIComponent(summaryBox.value);
+    window.open(`https://api.whatsapp.com/send?text=${encodedText}`, '_blank');
 };
 
 function initIframeToggle() {

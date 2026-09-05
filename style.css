@@ -349,6 +349,23 @@ html, body {
 .btn-whatsapp {
     background-color: #059669;
     color: var(--white-pure);
+    flex: 1;
+}
+
+.wa-btn-row {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.8rem;
+}
+
+.btn-whatsapp-direct {
+    background-color: #25D366;
+    color: var(--white-pure);
+    flex: 1;
+}
+
+.btn-whatsapp-direct:hover {
+    background-color: #1EBE57;
 }
 
 /* Info & Uniform Cards */

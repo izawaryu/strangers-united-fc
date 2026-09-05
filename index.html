@@ -17,7 +17,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@600;700;800;900&display=swap" rel="stylesheet">
     
     <!-- Mobile CSS Stylesheet -->
-    <link rel="stylesheet" href="style.css?v=fall2026_v4">
+    <link rel="stylesheet" href="style.css?v=fall2026_v7">
 </head>
 <body class="mobile-app">
 
@@ -198,14 +198,19 @@
                     <div class="wa-header">
                         <span class="wa-icon">💬</span>
                         <div>
-                            <h4>Share in Team WhatsApp</h4>
-                            <p>Copy formatted roster list for group chat</p>
+                            <h4>Share Poll in WhatsApp</h4>
+                            <p>Formatted match poll ready for team chat</p>
                         </div>
                     </div>
-                    <textarea id="rsvp-summary-box" readonly class="mobile-textarea" rows="5"></textarea>
-                    <button onclick="copyRSVPSummary()" class="app-btn btn-whatsapp">
-                        📋 Copy Attendance List
-                    </button>
+                    <textarea id="rsvp-summary-box" readonly class="mobile-textarea" rows="7"></textarea>
+                    <div class="wa-btn-row">
+                        <button onclick="copyRSVPSummary()" class="app-btn btn-whatsapp">
+                            📋 Copy Poll Text
+                        </button>
+                        <button onclick="shareToWhatsApp()" class="app-btn btn-whatsapp-direct">
+                            📲 Open WhatsApp
+                        </button>
+                    </div>
                 </div>
             </div>
         </section>
@@ -233,8 +238,8 @@
     </nav>
 
     <!-- Scripts -->
-    <script src="league_data.js?v=fall2026_v6"></script>
-    <script src="roster.js?v=fall2026_v6"></script>
-    <script src="app.js?v=fall2026_v6"></script>
+    <script src="league_data.js?v=fall2026_v7"></script>
+    <script src="roster.js?v=fall2026_v7"></script>
+    <script src="app.js?v=fall2026_v7"></script>
 </body>
 </html>
