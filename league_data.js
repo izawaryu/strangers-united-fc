@@ -7,12 +7,12 @@ const LEAGUE_INFO = {
 };
 
 const STANDINGS_DATA = [
-    { rank: 1, team: "STRANGERS UNITED", gp: 0, w: 0, l: 0, t: 0, gf: 0, ga: 0, pts: 0, gd: 0, isClub: true },
-    { rank: 2, team: "CASUAL WRECKS", gp: 0, w: 0, l: 0, t: 0, gf: 0, ga: 0, pts: 0, gd: 0, isClub: false },
-    { rank: 3, team: "ELLAS", gp: 0, w: 0, l: 0, t: 0, gf: 0, ga: 0, pts: 0, gd: 0, isClub: false },
-    { rank: 4, team: "FC JUVENTUS 40+", gp: 0, w: 0, l: 0, t: 0, gf: 0, ga: 0, pts: 0, gd: 0, isClub: false },
-    { rank: 5, team: "OCEAN ALUMNI FC", gp: 0, w: 0, l: 0, t: 0, gf: 0, ga: 0, pts: 0, gd: 0, isClub: false },
-    { rank: 6, team: "OUT OF SHAPE ALL STARS", gp: 0, w: 0, l: 0, t: 0, gf: 0, ga: 0, pts: 0, gd: 0, isClub: false }
+    { rank: 1, team: "ELLAS", gp: 1, w: 1, l: 0, t: 0, gf: 5, ga: 0, pts: 3, gd: 5, isClub: false },
+    { rank: 2, team: "FC JUVENTUS 40+", gp: 1, w: 1, l: 0, t: 0, gf: 4, ga: 3, pts: 3, gd: 1, isClub: false },
+    { rank: 3, team: "OUT OF SHAPE ALL STARS", gp: 1, w: 1, l: 0, t: 0, gf: 3, ga: 2, pts: 3, gd: 1, isClub: false },
+    { rank: 4, team: "CASUAL WRECKS", gp: 1, w: 0, l: 1, t: 0, gf: 3, ga: 4, pts: 0, gd: -1, isClub: false },
+    { rank: 5, team: "STRANGERS UNITED", gp: 1, w: 0, l: 1, t: 0, gf: 2, ga: 3, pts: 0, gd: -1, isClub: true },
+    { rank: 6, team: "OCEAN ALUMNI FC", gp: 1, w: 0, l: 1, t: 0, gf: 0, ga: 5, pts: 0, gd: -5, isClub: false }
 ];
 
 const MATCHES_DATA = [
@@ -22,11 +22,11 @@ const MATCHES_DATA = [
         time: "9:00 PM",
         home: "STRANGERS UNITED",
         away: "OUT OF SHAPE ALL STARS",
-        score: "vs",
-        status: "Upcoming",
+        score: "2 - 3",
+        status: "Completed",
         venue: "Wayside 4AB",
         isClubMatch: true,
-        result: "Upcoming"
+        result: "L"
     },
     {
         id: 2,
