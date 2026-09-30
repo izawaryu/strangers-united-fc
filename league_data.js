@@ -252,7 +252,7 @@ const MATCHES_DATA = [
         "away": "STRANGERS UNITED",
         "score": "vs",
         "status": "Upcoming",
-        "venue": "Wayside 4CD",
+        "venue": "Wayside 6AB",
         "isClubMatch": true,
         "result": "Upcoming"
     },
@@ -264,7 +264,7 @@ const MATCHES_DATA = [
         "away": "ELLAS",
         "score": "vs",
         "status": "Upcoming",
-        "venue": "Wayside 5CD",
+        "venue": "Wayside 6CD",
         "isClubMatch": false,
         "result": "Upcoming"
     },
