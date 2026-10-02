@@ -235,7 +235,7 @@ const MATCHES_DATA = [
     {
         "id": 13,
         "date": "Thu, Oct 1",
-        "time": "8:00 PM",
+        "time": "Result Pending",
         "home": "CASUAL WRECKS",
         "away": "OUT OF SHAPE ALL STARS",
         "score": "vs",
