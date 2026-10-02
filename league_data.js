@@ -247,7 +247,7 @@ const MATCHES_DATA = [
     {
         "id": 14,
         "date": "Thu, Oct 1",
-        "time": "10:00 PM",
+        "time": "Result Pending",
         "home": "OCEAN ALUMNI FC",
         "away": "STRANGERS UNITED",
         "score": "vs",
@@ -259,7 +259,7 @@ const MATCHES_DATA = [
     {
         "id": 15,
         "date": "Thu, Oct 1",
-        "time": "10:00 PM",
+        "time": "Result Pending",
         "home": "FC JUVENTUS 40+",
         "away": "ELLAS",
         "score": "vs",
