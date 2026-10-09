@@ -295,7 +295,7 @@ const MATCHES_DATA = [
     {
         "id": 18,
         "date": "Thu, Oct 8",
-        "time": "9:00 PM",
+        "time": "Result Pending",
         "home": "CASUAL WRECKS",
         "away": "FC JUVENTUS 40+",
         "score": "vs",
