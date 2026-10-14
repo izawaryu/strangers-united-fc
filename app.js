@@ -26,7 +26,7 @@ function renderNextMatchSpotlight() {
         container.innerHTML = `
             <div class="card next-match-card">
                 <div class="card-badge">SEASON COMPLETE</div>
-                <h3 style="font-family:var(--font-heading); color:var(--navy-deep); margin-top:0.4rem;">All Season Matches Completed!</h3>
+                <h3 style="font-family:var(--font-heading); color:var(--navy-deep); margin-top:0.4rem;">All Season Matches Completed</h3>
                 <p style="font-size:0.85rem; color:var(--slate-muted); margin-top:0.4rem;">Check the standings & schedule tab for full results.</p>
             </div>
         `;
@@ -219,10 +219,10 @@ function renderSeasonDuesTracker() {
 
     if (paidCount < minTarget) {
         const needed = minTarget - paidCount;
-        textEl.innerHTML = `<strong>${paidCount}</strong> committed players paid ($${collectedTotal} of $${totalCost} collected). Need <strong>${needed} more</strong> to reach minimum team registration!`;
+        textEl.innerHTML = `<strong>${paidCount}</strong> committed players paid ($${collectedTotal} of $${totalCost} collected). Need <strong>${needed} more</strong> to reach minimum team registration.`;
     } else {
         const extra = paidCount - minTarget;
-        textEl.innerHTML = `🎉 <strong>Minimum target reached!</strong> ${paidCount} players committed ($${collectedTotal} collected). ${extra > 0 ? `All ${extra} extra player dues will be refunded pro rata.` : 'Ready to lock in team deposit!'}`;
+        textEl.innerHTML = `<strong>Minimum target reached.</strong> ${paidCount} players committed ($${collectedTotal} collected). ${extra > 0 ? `All ${extra} extra player dues will be refunded pro rata.` : 'Ready to lock in team deposit.'}`;
     }
 }
 
@@ -237,7 +237,7 @@ function renderRegistrationRosterTable() {
     if (registrations.length === 0) {
         container.innerHTML = `
             <div class="empty-roster-msg">
-                No players registered yet. Be the first to commit for the season!
+                No players registered yet. Be the first to commit for the season.
             </div>
         `;
         return;
@@ -308,7 +308,7 @@ window.handlePlayerRegistration = function(e) {
     // Check for duplicate name
     const existingIndex = currentList.findIndex(p => p.name.toLowerCase() === name.toLowerCase());
     if (existingIndex >= 0) {
-        alert(`A player named "${name}" has already registered! If this is you, please contact the captain or update your note.`);
+        alert(`A player named "${name}" has already registered. If this is you, please contact the captain or update your note.`);
         return;
     }
 
@@ -339,9 +339,9 @@ window.handlePlayerRegistration = function(e) {
     if (msgBox) {
         msgBox.innerHTML = `
             <div class="reg-success-box">
-                ✅ <strong>Registration submitted!</strong><br>
+                ✅ <strong>Registration submitted.</strong><br>
                 Status is currently <strong>Unpaid (Pending Verification)</strong>.<br>
-                Please send your ~$140 dues via Venmo to <strong>@${SEASON_CONFIG.venmoHandle}</strong>. Once verified, you will be added to the team WhatsApp group and matchday roster!
+                Please send your $140 dues via Venmo to <strong>@${SEASON_CONFIG.venmoHandle}</strong>. Once verified, you will be added to the team WhatsApp group and matchday roster.
             </div>
         `;
         setTimeout(() => {
@@ -425,7 +425,7 @@ window.copyPaidWhatsAppList = function() {
 
     const text = paidWithWA.map(p => `${p.name}: ${p.whatsapp}`).join('\n');
     navigator.clipboard.writeText(text).then(() => {
-        alert(`Copied ${paidWithWA.length} WhatsApp numbers to clipboard!\n\n${text}`);
+        alert(`Copied ${paidWithWA.length} WhatsApp numbers to clipboard.\n\n${text}`);
     }).catch(() => {
         prompt('Copy the WhatsApp numbers below:', text);
     });
@@ -519,12 +519,12 @@ async function submitAttendance(status) {
     const matchId = matchSelect ? matchSelect.value : '';
 
     if (!playerName) {
-        alert('Please select your name from the drop-down menu first!');
+        alert('Please select your name from the drop-down menu first.');
         return;
     }
 
     if (!matchId) {
-        alert('Please select a match!');
+        alert('Please select a match.');
         return;
     }
 
@@ -550,12 +550,12 @@ async function submitAttendance(status) {
         });
 
         if (res.ok) {
-            if (msgBox) msgBox.innerHTML = '<span style="color:#059669;">✅ Saved online! Team status updated.</span>';
+            if (msgBox) msgBox.innerHTML = '<span style="color:#059669;">✅ Saved online. Team status updated.</span>';
         } else {
-            if (msgBox) msgBox.innerHTML = '<span style="color:#059669;">✅ Saved locally! Status updated.</span>';
+            if (msgBox) msgBox.innerHTML = '<span style="color:#059669;">✅ Saved locally. Status updated.</span>';
         }
     } catch (err) {
-        if (msgBox) msgBox.innerHTML = '<span style="color:#059669;">✅ Saved locally! Status updated.</span>';
+        if (msgBox) msgBox.innerHTML = '<span style="color:#059669;">✅ Saved locally. Status updated.</span>';
     }
 
     setTimeout(() => {
@@ -674,7 +674,7 @@ window.copyRSVPSummary = function() {
 
     summaryBox.select();
     document.execCommand('copy');
-    alert('Poll copied to clipboard! Ready to paste into WhatsApp.');
+    alert('Poll copied to clipboard. Ready to paste into WhatsApp.');
 };
 
 window.shareToWhatsApp = function() {

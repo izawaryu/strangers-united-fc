@@ -1,13 +1,13 @@
 // Strangers United FC - Season Registration & Roster Data
 
 const SEASON_CONFIG = {
-    seasonName: "CSX Fall Men 40+ IV 2026",
+    seasonName: "CSX Winter 2026/2027",
     teamFee: 1099,
     refFeePerGame: 30,
     estGames: 10,
     totalCost: 1399, // $1,099 league fee + 10 matches * $30 referee fee = $1,399
     minPlayers: 10,
-    targetDues: 140, // $1,399 / 10 = ~$140 per player
+    targetDues: 140, // $1,399 / 10 = $140 per player
     venmoHandle: "Ryu-Izawa",
     venmoUrl: "https://venmo.com/u/Ryu-Izawa",
     captainPin: "1234"
