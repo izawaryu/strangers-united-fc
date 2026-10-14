@@ -17,7 +17,8 @@ function renderNextMatchSpotlight() {
     const container = document.getElementById('next-match-spotlight-container');
     if (!container) return;
 
-    const nextMatch = MATCHES_DATA.find(m => m.status === 'Upcoming');
+    // Ensure we specifically find the next upcoming Strangers United fixture
+    const nextMatch = MATCHES_DATA.find(m => m.status === 'Upcoming' && m.isClubMatch);
 
     if (!nextMatch) {
         container.innerHTML = `
