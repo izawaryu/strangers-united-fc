@@ -215,10 +215,11 @@ function renderSeasonDuesTracker() {
     fillEl.style.width = `${pct}%`;
 
     const collectedTotal = paidCount * estDues;
+    const totalCost = SEASON_CONFIG.totalCost || 1399;
 
     if (paidCount < minTarget) {
         const needed = minTarget - paidCount;
-        textEl.innerHTML = `<strong>${paidCount}</strong> committed players paid ($${collectedTotal} collected). Need <strong>${needed} more</strong> to reach minimum team registration!`;
+        textEl.innerHTML = `<strong>${paidCount}</strong> committed players paid ($${collectedTotal} of $${totalCost} collected). Need <strong>${needed} more</strong> to reach minimum team registration!`;
     } else {
         const extra = paidCount - minTarget;
         textEl.innerHTML = `🎉 <strong>Minimum target reached!</strong> ${paidCount} players committed ($${collectedTotal} collected). ${extra > 0 ? `All ${extra} extra player dues will be refunded pro rata.` : 'Ready to lock in team deposit!'}`;
