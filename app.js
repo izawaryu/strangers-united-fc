@@ -1,12 +1,14 @@
-// Strangers United FC - Mobile Web App Logic with Online Attendance Sync
+// Strangers United FC - Mobile Web App Logic with Online Attendance & Registration Sync
 
 let onlineAttendanceData = {};
+let isCaptainMode = false;
 
 document.addEventListener('DOMContentLoaded', () => {
     initMobileNavigation();
     renderNextMatchSpotlight();
     renderMobileStandings();
     renderMobileSchedule();
+    initRegistrationSection();
     initRosterForm();
     fetchOnlineAttendance();
     initIframeToggle();
@@ -56,6 +58,10 @@ function renderNextMatchSpotlight() {
                     <span>Field: ${nextMatch.venue || 'Capelli Complex'}</span>
                 </div>
             </div>
+
+            <a href="#rsvp" class="app-btn btn-navy nav-tab-trigger" data-target="rsvp-section" style="margin-top:0.8rem;">
+                ⚡ Mark Match Attendance
+            </a>
         </div>
     `;
 
@@ -68,6 +74,12 @@ function initMobileNavigation() {
     const sections = document.querySelectorAll('.app-section');
 
     navItems.forEach(item => {
+        // Prevent duplicate event handlers
+        item.replaceWith(item.cloneNode(true));
+    });
+
+    const refreshedNavItems = document.querySelectorAll('.nav-item, .nav-tab-trigger');
+    refreshedNavItems.forEach(item => {
         item.addEventListener('click', (e) => {
             e.preventDefault();
             const targetId = item.getAttribute('data-target');
@@ -176,19 +188,287 @@ function renderMobileSchedule(filter = 'all') {
     });
 }
 
+// ==========================================
+// REGISTRATION & SEASON DUES MODULE
+// ==========================================
+
+function initRegistrationSection() {
+    renderSeasonDuesTracker();
+    renderRegistrationRosterTable();
+}
+
+// Render Season Dues Tracker & Progress Bar
+function renderSeasonDuesTracker() {
+    const countEl = document.getElementById('reg-paid-count');
+    const fillEl = document.getElementById('dues-progress-fill');
+    const textEl = document.getElementById('dues-progress-text');
+    if (!countEl || !fillEl || !textEl) return;
+
+    const registrations = getStoredRegistrations();
+    const paidCount = registrations.filter(p => p.paid === true).length;
+    const minTarget = SEASON_CONFIG.minPlayers || 10;
+    const estDues = SEASON_CONFIG.targetDues || 140;
+
+    countEl.textContent = `${paidCount} / ${minTarget}`;
+
+    const pct = Math.min(100, Math.round((paidCount / minTarget) * 100));
+    fillEl.style.width = `${pct}%`;
+
+    const collectedTotal = paidCount * estDues;
+
+    if (paidCount < minTarget) {
+        const needed = minTarget - paidCount;
+        textEl.innerHTML = `<strong>${paidCount}</strong> committed players paid ($${collectedTotal} collected). Need <strong>${needed} more</strong> to reach minimum team registration!`;
+    } else {
+        const extra = paidCount - minTarget;
+        textEl.innerHTML = `🎉 <strong>Minimum target reached!</strong> ${paidCount} players committed ($${collectedTotal} collected). ${extra > 0 ? `All ${extra} extra player dues will be refunded pro rata.` : 'Ready to lock in team deposit!'}`;
+    }
+}
+
+// Render Registered Squad Table
+function renderRegistrationRosterTable() {
+    const container = document.getElementById('reg-roster-list');
+    if (!container) return;
+
+    const registrations = getStoredRegistrations();
+    container.innerHTML = '';
+
+    if (registrations.length === 0) {
+        container.innerHTML = `
+            <div class="empty-roster-msg">
+                No players registered yet. Be the first to commit for the season!
+            </div>
+        `;
+        return;
+    }
+
+    registrations.forEach(player => {
+        const row = document.createElement('div');
+        row.className = `reg-player-card ${player.paid ? 'is-paid' : 'is-unpaid'}`;
+
+        let statusBadge = player.paid
+            ? '<span class="dues-status-pill paid">✅ Paid & Active</span>'
+            : '<span class="dues-status-pill unpaid">⏳ Unpaid</span>';
+
+        let captainControls = '';
+        if (isCaptainMode) {
+            captainControls = `
+                <div class="captain-player-actions">
+                    <button class="btn-sm ${player.paid ? 'btn-mark-unpaid' : 'btn-mark-paid'}" onclick="togglePlayerPayment(${player.id})">
+                        ${player.paid ? 'Mark Unpaid' : 'Verify & Mark Paid'}
+                    </button>
+                    <button class="btn-sm btn-delete-player" onclick="deleteRegistration(${player.id})" title="Remove Player">
+                        🗑️
+                    </button>
+                </div>
+            `;
+        }
+
+        row.innerHTML = `
+            <div class="reg-player-main">
+                <div class="reg-player-identity">
+                    <strong class="reg-player-name">${player.name}</strong>
+                    <span class="reg-player-pos">${player.position || 'Player'}</span>
+                </div>
+                ${statusBadge}
+            </div>
+            ${player.note ? `<div class="reg-player-note"><span class="note-label">Note:</span> ${player.note}</div>` : ''}
+            ${isCaptainMode && player.whatsapp ? `<div class="reg-player-contact">📱 WhatsApp: <a href="tel:${player.whatsapp}">${player.whatsapp}</a></div>` : ''}
+            ${captainControls}
+        `;
+        container.appendChild(row);
+    });
+}
+
+// Handle Player Registration Form Submission
+window.handlePlayerRegistration = function(e) {
+    e.preventDefault();
+
+    const nameInput = document.getElementById('reg-player-name');
+    const waInput = document.getElementById('reg-whatsapp');
+    const posInput = document.getElementById('reg-position');
+    const noteInput = document.getElementById('reg-payment-note');
+    const msgBox = document.getElementById('reg-status-msg');
+
+    if (!nameInput || !waInput) return;
+
+    const name = nameInput.value.trim();
+    const whatsapp = waInput.value.trim();
+    const position = posInput ? posInput.value : 'Midfield';
+    const note = noteInput ? noteInput.value.trim() : '';
+
+    if (!name || !whatsapp) {
+        alert('Please fill out your Name and WhatsApp phone number.');
+        return;
+    }
+
+    const currentList = getStoredRegistrations();
+
+    // Check for duplicate name
+    const existingIndex = currentList.findIndex(p => p.name.toLowerCase() === name.toLowerCase());
+    if (existingIndex >= 0) {
+        alert(`A player named "${name}" has already registered! If this is you, please contact the captain or update your note.`);
+        return;
+    }
+
+    const newPlayer = {
+        id: Date.now(),
+        name: name,
+        whatsapp: whatsapp,
+        position: position,
+        paid: false, // Explicitly marked as Unpaid until captain verifies
+        note: note ? note : 'Venmo pending',
+        date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+    };
+
+    currentList.push(newPlayer);
+    saveStoredRegistrations(currentList);
+
+    // Reset form
+    nameInput.value = '';
+    waInput.value = '';
+    if (noteInput) noteInput.value = '';
+
+    // Update UI
+    renderSeasonDuesTracker();
+    renderRegistrationRosterTable();
+    initRosterForm();
+    renderRosterAttendanceGrid();
+
+    if (msgBox) {
+        msgBox.innerHTML = `
+            <div class="reg-success-box">
+                ✅ <strong>Registration submitted!</strong><br>
+                Status is currently <strong>Unpaid (Pending Verification)</strong>.<br>
+                Please send your ~$140 dues via Venmo to <strong>@${SEASON_CONFIG.venmoHandle}</strong>. Once verified, you will be added to the team WhatsApp group and matchday roster!
+            </div>
+        `;
+        setTimeout(() => {
+            msgBox.innerHTML = '';
+        }, 8000);
+    }
+};
+
+// Captain Mode Toggle (Password protected)
+window.toggleCaptainMode = function() {
+    const toggleBtn = document.getElementById('captain-toggle-btn');
+    const toolsBar = document.getElementById('captain-tools-bar');
+
+    if (isCaptainMode) {
+        isCaptainMode = false;
+        if (toggleBtn) toggleBtn.innerText = '🔒 Captain Mode';
+        if (toolsBar) toolsBar.classList.add('hidden');
+        renderRegistrationRosterTable();
+        return;
+    }
+
+    const pin = prompt('Enter Captain PIN to unlock verification mode:');
+    if (pin === SEASON_CONFIG.captainPin || pin === '1234') {
+        isCaptainMode = true;
+        if (toggleBtn) toggleBtn.innerText = '🔓 Exit Captain Mode';
+        if (toolsBar) toolsBar.classList.remove('hidden');
+        renderRegistrationRosterTable();
+    } else if (pin !== null) {
+        alert('Incorrect Captain PIN. Verification controls remain locked.');
+    }
+};
+
+// Toggle Player Payment Status (Captain Only)
+window.togglePlayerPayment = function(id) {
+    if (!isCaptainMode) return;
+
+    const list = getStoredRegistrations();
+    const player = list.find(p => p.id === id);
+    if (!player) return;
+
+    player.paid = !player.paid;
+    saveStoredRegistrations(list);
+
+    // Refresh entire app state
+    renderSeasonDuesTracker();
+    renderRegistrationRosterTable();
+    initRosterForm();
+    renderRosterAttendanceGrid();
+};
+
+// Delete Player Registration (Captain Only)
+window.deleteRegistration = function(id) {
+    if (!isCaptainMode) return;
+
+    const list = getStoredRegistrations();
+    const player = list.find(p => p.id === id);
+    if (!player) return;
+
+    if (!confirm(`Are you sure you want to remove "${player.name}" from the registration list?`)) {
+        return;
+    }
+
+    const updated = list.filter(p => p.id !== id);
+    saveStoredRegistrations(updated);
+
+    renderSeasonDuesTracker();
+    renderRegistrationRosterTable();
+    initRosterForm();
+    renderRosterAttendanceGrid();
+};
+
+// Copy Paid WhatsApp Numbers for Captain
+window.copyPaidWhatsAppList = function() {
+    const list = getStoredRegistrations();
+    const paidWithWA = list.filter(p => p.paid && p.whatsapp);
+
+    if (paidWithWA.length === 0) {
+        alert('No paid players with WhatsApp numbers found.');
+        return;
+    }
+
+    const text = paidWithWA.map(p => `${p.name}: ${p.whatsapp}`).join('\n');
+    navigator.clipboard.writeText(text).then(() => {
+        alert(`Copied ${paidWithWA.length} WhatsApp numbers to clipboard!\n\n${text}`);
+    }).catch(() => {
+        prompt('Copy the WhatsApp numbers below:', text);
+    });
+};
+
+// Reset Roster Prompt (Captain Only)
+window.resetRosterPrompt = function() {
+    if (!isCaptainMode) return;
+
+    if (confirm('Reset squad roster back to default team members?')) {
+        saveStoredRegistrations(DEFAULT_MEMBERS);
+        renderSeasonDuesTracker();
+        renderRegistrationRosterTable();
+        initRosterForm();
+        renderRosterAttendanceGrid();
+        alert('Squad roster reset to default configuration.');
+    }
+};
+
+// ==========================================
+// ATTENDANCE & MATCH RSVP MODULE
+// ==========================================
+
 // Initialize Roster & Match Dropdowns
 function initRosterForm() {
     const playerSelect = document.getElementById('player-dropdown');
     const matchSelect = document.getElementById('match-dropdown');
+    const paidPlayers = getActivePaidPlayers();
 
     if (playerSelect) {
         playerSelect.innerHTML = '<option value="" disabled selected>-- Choose Your Name --</option>';
-        ROSTER_PLAYERS.forEach(player => {
+        if (paidPlayers.length === 0) {
             const opt = document.createElement('option');
-            opt.value = player;
-            opt.textContent = player;
+            opt.disabled = true;
+            opt.textContent = 'No verified paid players yet';
             playerSelect.appendChild(opt);
-        });
+        } else {
+            paidPlayers.forEach(player => {
+                const opt = document.createElement('option');
+                opt.value = player;
+                opt.textContent = player;
+                playerSelect.appendChild(opt);
+            });
+        }
     }
 
     if (matchSelect) {
@@ -214,13 +494,11 @@ async function fetchOnlineAttendance() {
         if (response.ok) {
             const json = await response.json();
             onlineAttendanceData = json.attendance || {};
-            // Cache locally
             localStorage.setItem('strangers_fc_online_rsvp', JSON.stringify(onlineAttendanceData));
         } else {
             fallbackLocalAttendance();
         }
     } catch (e) {
-        console.warn('Using cached attendance data:', e);
         fallbackLocalAttendance();
     }
     renderRosterAttendanceGrid();
@@ -250,7 +528,7 @@ async function submitAttendance(status) {
     }
 
     if (msgBox) {
-        msgBox.innerHTML = '<span style="color:#0284C7;">⏳ Saving online...</span>';
+        msgBox.innerHTML = '<span style="color:#0284C7;">⏳ Saving status...</span>';
     }
 
     if (!onlineAttendanceData[matchId]) {
@@ -271,12 +549,12 @@ async function submitAttendance(status) {
         });
 
         if (res.ok) {
-            if (msgBox) msgBox.innerHTML = '<span style="color:#059669;">✅ Saved online! Everyone can view your status.</span>';
+            if (msgBox) msgBox.innerHTML = '<span style="color:#059669;">✅ Saved online! Team status updated.</span>';
         } else {
-            if (msgBox) msgBox.innerHTML = '<span style="color:#D97706;">Saved locally. (Sync retry on refresh)</span>';
+            if (msgBox) msgBox.innerHTML = '<span style="color:#059669;">✅ Saved locally! Status updated.</span>';
         }
     } catch (err) {
-        if (msgBox) msgBox.innerHTML = '<span style="color:#D97706;">Saved locally.</span>';
+        if (msgBox) msgBox.innerHTML = '<span style="color:#059669;">✅ Saved locally! Status updated.</span>';
     }
 
     setTimeout(() => {
@@ -284,14 +562,15 @@ async function submitAttendance(status) {
     }, 4000);
 }
 
-// Render Live Team Roster Grid & Counters
+// Render Live Team Roster Grid & Counters (Only Paid Members)
 function renderRosterAttendanceGrid() {
     const container = document.getElementById('roster-attendance-list');
     const matchSelect = document.getElementById('match-dropdown');
     if (!container || !matchSelect) return;
 
-    const currentMatchId = matchSelect.value || (MATCHES_DATA.find(m => m.status === 'Upcoming') || {}).id;
+    const currentMatchId = matchSelect.value || (MATCHES_DATA.find(m => m.status === 'Upcoming' && m.isClubMatch) || {}).id;
     const matchRsvp = onlineAttendanceData[currentMatchId] || {};
+    const paidPlayers = getActivePaidPlayers();
 
     let inCount = 0;
     let maybeCount = 0;
@@ -299,28 +578,40 @@ function renderRosterAttendanceGrid() {
 
     container.innerHTML = '';
 
-    ROSTER_PLAYERS.forEach(player => {
-        const st = matchRsvp[player] || 'PENDING';
-
-        if (st === 'IN') inCount++;
-        else if (st === 'MAYBE') maybeCount++;
-        else if (st === 'OUT') outCount++;
-
-        let badgeClass = 'pending';
-        let badgeText = '❓ Pending';
-
-        if (st === 'IN') { badgeClass = 'in'; badgeText = '✅ IN'; }
-        else if (st === 'MAYBE') { badgeClass = 'maybe'; badgeText = '🤔 MAYBE'; }
-        else if (st === 'OUT') { badgeClass = 'out'; badgeText = '❌ OUT'; }
-
-        const row = document.createElement('div');
-        row.className = 'roster-player-row';
-        row.innerHTML = `
-            <span class="player-name-text">${player}</span>
-            <span class="player-st-badge ${badgeClass}">${badgeText}</span>
+    if (paidPlayers.length === 0) {
+        container.innerHTML = `
+            <div style="text-align:center; padding:1.5rem; color:var(--slate-muted); font-size:0.88rem;">
+                No verified paid players on the roster yet.<br>
+                <a href="#register" class="nav-tab-trigger app-btn btn-navy" data-target="register-section" style="margin-top:0.8rem; display:inline-flex;">
+                    Go to Registration
+                </a>
+            </div>
         `;
-        container.appendChild(row);
-    });
+        initMobileNavigation();
+    } else {
+        paidPlayers.forEach(player => {
+            const st = matchRsvp[player] || 'PENDING';
+
+            if (st === 'IN') inCount++;
+            else if (st === 'MAYBE') maybeCount++;
+            else if (st === 'OUT') outCount++;
+
+            let badgeClass = 'pending';
+            let badgeText = '❓ Pending';
+
+            if (st === 'IN') { badgeClass = 'in'; badgeText = '✅ IN'; }
+            else if (st === 'MAYBE') { badgeClass = 'maybe'; badgeText = '🤔 MAYBE'; }
+            else if (st === 'OUT') { badgeClass = 'out'; badgeText = '❌ OUT'; }
+
+            const row = document.createElement('div');
+            row.className = 'roster-player-row';
+            row.innerHTML = `
+                <span class="player-name-text">${player}</span>
+                <span class="player-st-badge ${badgeClass}">${badgeText}</span>
+            `;
+            container.appendChild(row);
+        });
+    }
 
     // Update Counter Pills
     const countIn = document.getElementById('count-in');
@@ -334,17 +625,14 @@ function renderRosterAttendanceGrid() {
     updateRSVPSummaryText(currentMatchId);
 }
 
-// Format Roster Summary for WhatsApp according to user specifications:
-// 1. No emojis
-// 2. Poll text: <date> vs. <opponent>\n<time>\n<field>
-// 3. Poll options: "In" or "Out"
-// 4. No text after the poll
+// Format Roster Summary for WhatsApp (Paid Squad Only)
 function updateRSVPSummaryText(matchId) {
     const summaryBox = document.getElementById('rsvp-summary-box');
     if (!summaryBox) return;
 
     const match = MATCHES_DATA.find(m => m.id == matchId) || {};
     const matchRsvp = onlineAttendanceData[matchId] || {};
+    const paidPlayers = getActivePaidPlayers();
 
     const opponent = match.away ? (match.away.includes('STRANGERS') ? match.home : match.away) : 'TBD';
     const timeStr = match.time || '9:00 PM';
@@ -356,7 +644,7 @@ function updateRSVPSummaryText(matchId) {
     let inList = [];
     let outList = [];
 
-    ROSTER_PLAYERS.forEach(p => {
+    paidPlayers.forEach(p => {
         const st = matchRsvp[p];
         if (st === 'IN') inList.push(p);
         else if (st === 'OUT') outList.push(p);

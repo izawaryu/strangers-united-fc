@@ -889,3 +889,463 @@ html, body {
     stroke: var(--navy-deep);
     transform: translateY(-1px);
 }
+
+
+/* =========================================================
+   SEASON REGISTRATION & DUES MANAGEMENT STYLES
+   ========================================================= */
+
+/* Home Section Registration Banner */
+.home-reg-banner {
+    margin-top: 1rem;
+    background: linear-gradient(135deg, #F8FAFC 0%, #EFF6FF 100%);
+    border: 1.5px solid #BFDBFE;
+    border-radius: var(--radius-lg);
+    padding: 1.25rem;
+    box-shadow: var(--shadow-sm);
+}
+
+.home-reg-header h3 {
+    font-family: var(--font-heading);
+    color: var(--navy-deep);
+    font-size: 1.15rem;
+    margin: 0.4rem 0 0.2rem 0;
+}
+
+.home-reg-header p {
+    font-size: 0.85rem;
+    color: var(--slate-dark);
+    margin-bottom: 0.8rem;
+    line-height: 1.4;
+}
+
+.home-reg-actions {
+    display: flex;
+}
+
+/* Dues Info Card */
+.dues-info-card {
+    background: var(--white-pure);
+    border: 1px solid var(--slate-border);
+    border-radius: var(--radius-lg);
+    padding: 1.25rem;
+    box-shadow: var(--shadow-sm);
+    margin-bottom: 1rem;
+}
+
+.dues-badge {
+    display: inline-block;
+    background: #E0E7FF;
+    color: var(--navy-primary);
+    font-size: 0.7rem;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    padding: 0.25rem 0.6rem;
+    border-radius: 20px;
+    margin-bottom: 0.4rem;
+}
+
+.dues-amount-title {
+    font-family: var(--font-heading);
+    font-size: 2rem;
+    font-weight: 900;
+    color: var(--navy-deep);
+    margin: 0.2rem 0;
+}
+
+.dues-sub {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--slate-muted);
+}
+
+.dues-desc {
+    font-size: 0.85rem;
+    color: var(--slate-dark);
+    margin-bottom: 1rem;
+    line-height: 1.4;
+}
+
+.dues-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+/* Progress Bar */
+.progress-bar-container {
+    width: 100%;
+    height: 10px;
+    background: var(--slate-light);
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 0.4rem;
+}
+
+.progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--navy-primary) 0%, var(--green-win) 100%);
+    border-radius: 10px;
+    transition: width 0.4s ease;
+}
+
+.progress-note {
+    font-size: 0.78rem;
+    color: var(--slate-muted);
+    margin-bottom: 0.8rem;
+    line-height: 1.35;
+}
+
+/* Pro Rata Callout */
+.pro-rata-callout {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+    background: #FEF3C7;
+    border-left: 4px solid var(--gold-accent);
+    padding: 0.75rem 0.85rem;
+    border-radius: var(--radius-sm);
+    margin-bottom: 1.1rem;
+}
+
+.pro-rata-callout .callout-icon {
+    font-size: 1.1rem;
+    line-height: 1;
+}
+
+.pro-rata-callout p {
+    font-size: 0.8rem;
+    color: #78350F;
+    line-height: 1.35;
+    margin: 0;
+}
+
+/* Venmo Box */
+.venmo-pay-box {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #008CFF12;
+    border: 1px solid #008CFF44;
+    border-radius: var(--radius-md);
+    padding: 0.85rem 1rem;
+    gap: 0.8rem;
+}
+
+.venmo-user-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.venmo-logo-text {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #008CFF;
+}
+
+.venmo-handle {
+    font-family: var(--font-heading);
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: var(--navy-deep);
+}
+
+.btn-venmo {
+    background-color: #008CFF;
+    color: var(--white-pure);
+    text-decoration: none;
+    font-weight: 800;
+    font-size: 0.85rem;
+    padding: 0.65rem 1.1rem;
+    border-radius: 20px;
+    white-space: nowrap;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0, 140, 255, 0.3);
+}
+
+.btn-venmo:hover {
+    background-color: #0077DB;
+}
+
+/* Registration Form Card */
+.reg-form-card {
+    background: var(--white-pure);
+    border: 1px solid var(--slate-border);
+    border-radius: var(--radius-lg);
+    padding: 1.25rem;
+    box-shadow: var(--shadow-sm);
+    margin-bottom: 1rem;
+}
+
+.form-subtitle {
+    font-size: 0.8rem;
+    color: var(--slate-muted);
+    margin-bottom: 1rem;
+    line-height: 1.4;
+}
+
+.mobile-input {
+    width: 100%;
+    padding: 0.75rem 0.9rem;
+    border-radius: var(--radius-md);
+    border: 1.5px solid var(--slate-border);
+    background: var(--white-pure);
+    color: var(--slate-dark);
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    outline: none;
+    transition: border-color 0.2s ease;
+}
+
+.mobile-input:focus {
+    border-color: var(--navy-deep);
+}
+
+.field-hint {
+    display: block;
+    font-size: 0.72rem;
+    color: var(--slate-muted);
+    margin-top: 0.3rem;
+}
+
+.reg-success-box {
+    background: #ECFDF5;
+    border: 1.5px solid #A7F3D0;
+    color: #065F46;
+    padding: 0.85rem;
+    border-radius: var(--radius-md);
+    font-size: 0.85rem;
+    line-height: 1.45;
+    margin-top: 0.8rem;
+}
+
+/* Roster Transparency Card */
+.roster-transparency-card {
+    background: var(--white-pure);
+    border: 1px solid var(--slate-border);
+    border-radius: var(--radius-lg);
+    padding: 1.25rem;
+    box-shadow: var(--shadow-sm);
+    margin-bottom: 1rem;
+}
+
+.roster-card-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 0.8rem;
+}
+
+.roster-card-header h3 {
+    font-family: var(--font-heading);
+    font-size: 1.1rem;
+    color: var(--navy-deep);
+    margin: 0;
+}
+
+.card-sub-desc {
+    font-size: 0.75rem;
+    color: var(--slate-muted);
+    margin-top: 0.2rem;
+}
+
+.captain-mode-btn {
+    background: var(--slate-light);
+    border: 1px solid var(--slate-border);
+    color: var(--slate-dark);
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 0.4rem 0.75rem;
+    border-radius: 20px;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.captain-tools {
+    background: #EFF6FF;
+    border: 1px dashed var(--navy-primary);
+    border-radius: var(--radius-md);
+    padding: 0.75rem;
+    margin-bottom: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.captain-tools.hidden {
+    display: none;
+}
+
+.captain-active-badge {
+    font-size: 0.75rem;
+    font-weight: 800;
+    color: var(--navy-deep);
+}
+
+.captain-action-row {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.btn-sm {
+    padding: 0.35rem 0.7rem;
+    font-size: 0.75rem;
+    border-radius: 16px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+/* Registered Players List */
+.registered-players-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.reg-player-card {
+    background: var(--white-bg);
+    border: 1px solid var(--slate-border);
+    border-radius: var(--radius-md);
+    padding: 0.75rem 0.9rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+
+.reg-player-card.is-paid {
+    border-left: 4px solid var(--green-win);
+}
+
+.reg-player-card.is-unpaid {
+    border-left: 4px solid var(--red-loss);
+    background: #FFFBFB;
+}
+
+.reg-player-main {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.reg-player-identity {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+}
+
+.reg-player-name {
+    font-size: 0.95rem;
+    font-weight: 800;
+    color: var(--navy-deep);
+}
+
+.reg-player-pos {
+    font-size: 0.75rem;
+    color: var(--slate-muted);
+    font-weight: 600;
+}
+
+.dues-status-pill {
+    font-size: 0.72rem;
+    font-weight: 800;
+    padding: 0.2rem 0.55rem;
+    border-radius: 12px;
+}
+
+.dues-status-pill.paid {
+    background: #E6F4EA;
+    color: var(--green-win);
+}
+
+.dues-status-pill.unpaid {
+    background: #FCE8E6;
+    color: var(--red-loss);
+}
+
+.reg-player-note {
+    font-size: 0.75rem;
+    color: var(--slate-muted);
+}
+
+.reg-player-contact {
+    font-size: 0.75rem;
+    color: var(--navy-primary);
+    font-weight: 600;
+}
+
+.captain-player-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 0.3rem;
+    padding-top: 0.4rem;
+    border-top: 1px dashed var(--slate-border);
+}
+
+.btn-mark-paid {
+    background: #E6F4EA;
+    color: var(--green-win);
+    border: 1px solid var(--green-win);
+}
+
+.btn-mark-unpaid {
+    background: #FCE8E6;
+    color: var(--red-loss);
+    border: 1px solid var(--red-loss);
+}
+
+.btn-delete-player {
+    background: transparent;
+    border: 1px solid var(--slate-border);
+    cursor: pointer;
+    font-size: 0.8rem;
+    padding: 0.2rem 0.4rem;
+}
+
+/* Notice for Unpaid Players on Attendance Page */
+.unpaid-notice-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+    background: #EFF6FF;
+    border: 1px solid #BFDBFE;
+    padding: 0.85rem 1rem;
+    border-radius: var(--radius-md);
+    margin-bottom: 1rem;
+}
+
+.unpaid-notice-card .notice-icon {
+    font-size: 1.1rem;
+    line-height: 1.2;
+}
+
+.unpaid-notice-card .notice-content strong {
+    font-size: 0.85rem;
+    color: var(--navy-deep);
+}
+
+.unpaid-notice-card .notice-content p {
+    font-size: 0.78rem;
+    color: var(--slate-dark);
+    margin: 0.15rem 0 0 0;
+    line-height: 1.35;
+}
+
+.unpaid-notice-card a {
+    color: var(--navy-primary);
+    font-weight: 700;
+    text-decoration: underline;
+}
+
+/* Responsive Bottom Nav Tuning for 5 Tabs */
+.app-bottom-nav .nav-item {
+    font-size: 0.64rem;
+}
+
+.app-bottom-nav .nav-svg {
+    width: 20px;
+    height: 20px;
+}
