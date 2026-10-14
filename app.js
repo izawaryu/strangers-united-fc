@@ -9,8 +9,9 @@ document.addEventListener('DOMContentLoaded', () => {
     renderMobileStandings();
     renderMobileSchedule();
     initRegistrationSection();
-    initRosterForm();
-    fetchOnlineAttendance();
+    // Attendance disabled during off-season registration
+    // initRosterForm();
+    // fetchOnlineAttendance();
     initIframeToggle();
 });
 
@@ -58,10 +59,6 @@ function renderNextMatchSpotlight() {
                     <span>Field: ${nextMatch.venue || 'Capelli Complex'}</span>
                 </div>
             </div>
-
-            <a href="#rsvp" class="app-btn btn-navy nav-tab-trigger" data-target="rsvp-section" style="margin-top:0.8rem;">
-                ⚡ Mark Match Attendance
-            </a>
         </div>
     `;
 
@@ -333,15 +330,13 @@ window.handlePlayerRegistration = function(e) {
     // Update UI
     renderSeasonDuesTracker();
     renderRegistrationRosterTable();
-    initRosterForm();
-    renderRosterAttendanceGrid();
 
     if (msgBox) {
         msgBox.innerHTML = `
             <div class="reg-success-box">
                 ✅ <strong>Registration submitted.</strong><br>
                 Status is currently <strong>Unpaid (Pending Verification)</strong>.<br>
-                Please send your $140 dues via Venmo to <strong>@${SEASON_CONFIG.venmoHandle}</strong>. Once verified, you will be added to the team WhatsApp group and matchday roster.
+                Please send your $140 dues via Venmo to <strong>@${SEASON_CONFIG.venmoHandle}</strong>. Once verified, you will be added to the team WhatsApp group and season roster.
             </div>
         `;
         setTimeout(() => {

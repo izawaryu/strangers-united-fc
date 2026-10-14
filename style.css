@@ -1340,12 +1340,12 @@ html, body {
     text-decoration: underline;
 }
 
-/* Responsive Bottom Nav Tuning for 5 Tabs */
+/* Responsive Bottom Nav Tuning (4 Tabs) */
 .app-bottom-nav .nav-item {
-    font-size: 0.64rem;
+    font-size: 0.72rem;
 }
 
 .app-bottom-nav .nav-svg {
-    width: 20px;
-    height: 20px;
+    width: 22px;
+    height: 22px;
 }
