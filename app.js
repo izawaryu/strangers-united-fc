@@ -461,7 +461,7 @@ window.toggleCaptainMode = function() {
     }
 
     const pin = prompt('Enter Captain PIN to unlock verification mode:');
-    if (pin === SEASON_CONFIG.captainPin || pin === '1234') {
+    if (pin === SEASON_CONFIG.captainPin || pin === '2023') {
         isCaptainMode = true;
         if (toggleBtn) toggleBtn.innerText = '🔓 Exit Captain Mode';
         if (toolsBar) toolsBar.classList.remove('hidden');

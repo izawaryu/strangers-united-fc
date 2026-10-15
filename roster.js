@@ -10,7 +10,7 @@ const SEASON_CONFIG = {
     targetDues: 140, // $1,399 / 10 = $140 per player
     venmoHandle: "Ryu-Izawa",
     venmoUrl: "https://venmo.com/u/Ryu-Izawa",
-    captainPin: "1234"
+    captainPin: "2023"
 };
 
 // Initial roster: only Ryu is pre-listed as paid via Venmo.
