@@ -197,6 +197,31 @@ function initRegistrationSection() {
     initFirebaseSync();
 }
 
+// Helper: scan all possible local storage keys for players registered on this device
+function getLocalCandidatesForMigration() {
+    let candidates = [];
+    ['strangers_fc_registrations_v2', 'strangers_fc_registrations'].forEach(key => {
+        try {
+            const raw = localStorage.getItem(key);
+            if (raw) {
+                const list = JSON.parse(raw);
+                if (Array.isArray(list)) {
+                    list.forEach(p => {
+                        if (p && p.name && p.name.trim() !== '' && p.name.trim().toLowerCase() !== 'ryu') {
+                            if (!candidates.some(c => c.name.toLowerCase() === p.name.trim().toLowerCase())) {
+                                candidates.push(p);
+                            }
+                        }
+                    });
+                }
+            }
+        } catch (e) {
+            console.warn("Could not check local key", key, e);
+        }
+    });
+    return candidates;
+}
+
 // Live Multi-Device Cloud Sync with Firebase Firestore
 function initFirebaseSync() {
     if (typeof firebase !== 'undefined' && typeof isFirebaseConfigured !== 'undefined' && isFirebaseConfigured) {
@@ -224,25 +249,36 @@ function initFirebaseSync() {
                     }
 
                     // Auto-migrate any prior registrations saved locally on this device before Firebase was enabled
-                    const localRegistrations = getStoredRegistrations();
-                    localRegistrations.forEach(localP => {
-                        if (localP.name && localP.name.trim() !== '') {
-                            const existsInCloud = remoteList.some(r => r.name.toLowerCase() === localP.name.toLowerCase());
-                            if (!existsInCloud) {
-                                firestoreDb.collection('registrations_winter_2026').add({
-                                    id: localP.id || Date.now(),
-                                    name: localP.name,
-                                    whatsapp: localP.whatsapp || '',
-                                    position: localP.position || 'Midfield',
-                                    paid: Boolean(localP.paid),
-                                    note: localP.note || '',
-                                    date: localP.date || new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
-                                });
-                            }
+                    const localCandidates = getLocalCandidatesForMigration();
+                    localCandidates.forEach(localP => {
+                        const existsInCloud = remoteList.some(r => r.name.toLowerCase() === localP.name.trim().toLowerCase());
+                        if (!existsInCloud) {
+                            console.log(`Auto-uploading local registration for "${localP.name}" to Firebase`);
+                            firestoreDb.collection('registrations_winter_2026').add({
+                                id: localP.id || Date.now(),
+                                name: localP.name.trim(),
+                                whatsapp: localP.whatsapp || '',
+                                position: localP.position || 'Midfield',
+                                paid: Boolean(localP.paid),
+                                note: localP.note || '',
+                                date: localP.date || new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+                            }).then(() => {
+                                console.log(`Successfully migrated "${localP.name}" to Firebase.`);
+                            }).catch(err => {
+                                console.error(`Failed to migrate "${localP.name}":`, err);
+                            });
                         }
                     });
 
-                    saveStoredRegistrations(remoteList);
+                    // Merge remote list with any pending local candidates so UI stays responsive
+                    let mergedList = [...remoteList];
+                    localCandidates.forEach(localP => {
+                        if (!mergedList.some(m => m.name.toLowerCase() === localP.name.trim().toLowerCase())) {
+                            mergedList.push(localP);
+                        }
+                    });
+
+                    saveStoredRegistrations(mergedList);
                     renderSeasonDuesTracker();
                     renderRegistrationRosterTable();
                 }, (error) => {
