@@ -223,6 +223,25 @@ function initFirebaseSync() {
                         return;
                     }
 
+                    // Auto-migrate any prior registrations saved locally on this device before Firebase was enabled
+                    const localRegistrations = getStoredRegistrations();
+                    localRegistrations.forEach(localP => {
+                        if (localP.name && localP.name.trim() !== '') {
+                            const existsInCloud = remoteList.some(r => r.name.toLowerCase() === localP.name.toLowerCase());
+                            if (!existsInCloud) {
+                                firestoreDb.collection('registrations_winter_2026').add({
+                                    id: localP.id || Date.now(),
+                                    name: localP.name,
+                                    whatsapp: localP.whatsapp || '',
+                                    position: localP.position || 'Midfield',
+                                    paid: Boolean(localP.paid),
+                                    note: localP.note || '',
+                                    date: localP.date || new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+                                });
+                            }
+                        }
+                    });
+
                     saveStoredRegistrations(remoteList);
                     renderSeasonDuesTracker();
                     renderRegistrationRosterTable();
