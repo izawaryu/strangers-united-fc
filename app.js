@@ -189,9 +189,50 @@ function renderMobileSchedule(filter = 'all') {
 // REGISTRATION & SEASON DUES MODULE
 // ==========================================
 
+let firestoreDb = null;
+
 function initRegistrationSection() {
     renderSeasonDuesTracker();
     renderRegistrationRosterTable();
+    initFirebaseSync();
+}
+
+// Live Multi-Device Cloud Sync with Firebase Firestore
+function initFirebaseSync() {
+    if (typeof firebase !== 'undefined' && typeof isFirebaseConfigured !== 'undefined' && isFirebaseConfigured) {
+        try {
+            if (!firebase.apps.length) {
+                firebase.initializeApp(FIREBASE_CONFIG);
+            }
+            firestoreDb = firebase.firestore();
+            console.log("Connected to Firebase Firestore");
+
+            firestoreDb.collection('registrations_winter_2026')
+                .orderBy('id', 'asc')
+                .onSnapshot((snapshot) => {
+                    let remoteList = [];
+                    snapshot.forEach(doc => {
+                        remoteList.push({ _docId: doc.id, ...doc.data() });
+                    });
+
+                    // Seed default Ryu registration if remote database is empty
+                    if (remoteList.length === 0 && DEFAULT_MEMBERS.length > 0) {
+                        DEFAULT_MEMBERS.forEach(m => {
+                            firestoreDb.collection('registrations_winter_2026').add(m);
+                        });
+                        return;
+                    }
+
+                    saveStoredRegistrations(remoteList);
+                    renderSeasonDuesTracker();
+                    renderRegistrationRosterTable();
+                }, (error) => {
+                    console.warn("Firestore sync warning, falling back to local cache:", error);
+                });
+        } catch (err) {
+            console.warn("Firebase initialization warning:", err);
+        }
+    }
 }
 
 // Render Season Dues Tracker & Progress Bar
@@ -319,6 +360,12 @@ window.handlePlayerRegistration = function(e) {
         date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
     };
 
+    if (firestoreDb) {
+        firestoreDb.collection('registrations_winter_2026').add(newPlayer).catch(err => {
+            console.error("Firestore write failed:", err);
+        });
+    }
+
     currentList.push(newPlayer);
     saveStoredRegistrations(currentList);
 
@@ -377,14 +424,19 @@ window.togglePlayerPayment = function(id) {
     const player = list.find(p => p.id === id);
     if (!player) return;
 
-    player.paid = !player.paid;
+    const newPaidStatus = !player.paid;
+    player.paid = newPaidStatus;
     saveStoredRegistrations(list);
+
+    if (firestoreDb && player._docId) {
+        firestoreDb.collection('registrations_winter_2026').doc(player._docId).update({
+            paid: newPaidStatus
+        }).catch(err => console.error("Firestore update failed:", err));
+    }
 
     // Refresh entire app state
     renderSeasonDuesTracker();
     renderRegistrationRosterTable();
-    initRosterForm();
-    renderRosterAttendanceGrid();
 };
 
 // Delete Player Registration (Captain Only)
@@ -402,10 +454,14 @@ window.deleteRegistration = function(id) {
     const updated = list.filter(p => p.id !== id);
     saveStoredRegistrations(updated);
 
+    if (firestoreDb && player._docId) {
+        firestoreDb.collection('registrations_winter_2026').doc(player._docId).delete().catch(err => {
+            console.error("Firestore delete failed:", err);
+        });
+    }
+
     renderSeasonDuesTracker();
     renderRegistrationRosterTable();
-    initRosterForm();
-    renderRosterAttendanceGrid();
 };
 
 // Copy Paid WhatsApp Numbers for Captain
@@ -431,11 +487,19 @@ window.resetRosterPrompt = function() {
     if (!isCaptainMode) return;
 
     if (confirm('Reset squad roster back to default team members?')) {
+        if (firestoreDb) {
+            firestoreDb.collection('registrations_winter_2026').get().then(snapshot => {
+                const batch = firestoreDb.batch();
+                snapshot.forEach(doc => batch.delete(doc.ref));
+                batch.commit().then(() => {
+                    DEFAULT_MEMBERS.forEach(m => firestoreDb.collection('registrations_winter_2026').add(m));
+                });
+            }).catch(err => console.error("Firestore reset error:", err));
+        }
+
         saveStoredRegistrations(DEFAULT_MEMBERS);
         renderSeasonDuesTracker();
         renderRegistrationRosterTable();
-        initRosterForm();
-        renderRosterAttendanceGrid();
         alert('Squad roster reset to default configuration.');
     }
 };
