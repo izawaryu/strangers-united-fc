@@ -22,15 +22,15 @@ const STANDINGS_DATA = [
     },
     {
         "rank": 2,
-        "team": "FC JUVENTUS 40+",
+        "team": "OUT OF SHAPE ALL STARS",
         "gp": 7,
         "w": 5,
         "l": 2,
         "t": 0,
-        "gf": 27,
-        "ga": 22,
+        "gf": 32,
+        "ga": 21,
         "pts": 15,
-        "gd": 5,
+        "gd": 11,
         "isClub": false
     },
     {
@@ -48,15 +48,15 @@ const STANDINGS_DATA = [
     },
     {
         "rank": 4,
-        "team": "OUT OF SHAPE ALL STARS",
+        "team": "FC JUVENTUS 40+",
         "gp": 7,
         "w": 4,
         "l": 3,
         "t": 0,
-        "gf": 27,
-        "ga": 26,
+        "gf": 22,
+        "ga": 27,
         "pts": 12,
-        "gd": 1,
+        "gd": -5,
         "isClub": false
     },
     {
@@ -334,7 +334,7 @@ const MATCHES_DATA = [
         "time": "",
         "home": "OUT OF SHAPE ALL STARS",
         "away": "FC JUVENTUS 40+",
-        "score": "0 - 5",
+        "score": "5 - 0",
         "status": "Completed",
         "venue": "Wayside 5CD",
         "isClubMatch": false,
