@@ -348,7 +348,7 @@ const MATCHES_DATA = [
         "away": "STRANGERS UNITED",
         "score": "vs",
         "status": "Upcoming",
-        "venue": "Wayside 4CD",
+        "venue": "Wayside 6CD",
         "isClubMatch": true,
         "result": "Upcoming"
     },
