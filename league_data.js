@@ -379,36 +379,36 @@ const MATCHES_DATA = [
     {
         "id": 25,
         "date": "Thu, Oct 29",
-        "time": "Result Pending",
+        "time": "",
         "home": "ELLAS",
         "away": "FC JUVENTUS 40+",
-        "score": "vs",
-        "status": "Upcoming",
+        "score": "4 - 3",
+        "status": "Completed",
         "venue": "Wayside 6AB",
         "isClubMatch": false,
-        "result": "Upcoming"
+        "result": "Completed"
     },
     {
         "id": 26,
         "date": "Thu, Oct 29",
-        "time": "Result Pending",
+        "time": "",
         "home": "OCEAN ALUMNI FC",
         "away": "OUT OF SHAPE ALL STARS",
-        "score": "vs",
-        "status": "Upcoming",
+        "score": "6 - 3",
+        "status": "Completed",
         "venue": "Wayside 6CD",
         "isClubMatch": false,
-        "result": "Upcoming"
+        "result": "Completed"
     },
     {
         "id": 27,
         "date": "Thu, Nov 5",
-        "time": "10:00 PM",
-        "home": "Winner 1st vs 4th",
-        "away": "Winner 2nd vs 3rd",
+        "time": "9:00 PM",
+        "home": "ELLAS",
+        "away": "OCEAN ALUMNI FC",
         "score": "vs",
         "status": "Upcoming",
-        "venue": "Wayside 5CD",
+        "venue": "Wayside 6CD",
         "isClubMatch": false,
         "result": "Upcoming"
     }
