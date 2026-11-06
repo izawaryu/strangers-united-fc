@@ -403,7 +403,7 @@ const MATCHES_DATA = [
     {
         "id": 27,
         "date": "Thu, Nov 5",
-        "time": "9:00 PM",
+        "time": "Result Pending",
         "home": "ELLAS",
         "away": "OCEAN ALUMNI FC",
         "score": "vs",
