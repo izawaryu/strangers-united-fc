@@ -403,13 +403,13 @@ const MATCHES_DATA = [
     {
         "id": 27,
         "date": "Thu, Nov 5",
-        "time": "Result Pending",
+        "time": "",
         "home": "ELLAS",
         "away": "OCEAN ALUMNI FC",
-        "score": "vs",
-        "status": "Upcoming",
+        "score": "6 - 4",
+        "status": "Completed",
         "venue": "Wayside 6CD",
         "isClubMatch": false,
-        "result": "Upcoming"
+        "result": "Completed"
     }
 ];
