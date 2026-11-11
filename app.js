@@ -282,7 +282,9 @@ function initFirebaseSync() {
                     renderSeasonDuesTracker();
                     renderRegistrationRosterTable();
                 }, (error) => {
-                    console.warn("Firestore sync warning, falling back to local cache:", error);
+                    console.warn("Firestore sync warning (check Firestore Security Rules in Firebase Console if permission-denied), falling back to local/baseline roster:", error);
+                    renderSeasonDuesTracker();
+                    renderRegistrationRosterTable();
                 });
         } catch (err) {
             console.warn("Firebase initialization warning:", err);

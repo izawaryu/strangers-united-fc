@@ -138,5 +138,48 @@ const MATCHES_DATA = {json.dumps(matches, indent=4)};
     except Exception as e:
         print("Sync execution error:", e)
 
+FIRESTORE_URL = "https://firestore.googleapis.com/v1/projects/strangers-fc-9fd65/databases/(default)/documents/registrations_winter_2026"
+ROSTER_PATH = os.path.normpath(os.path.join(os.path.dirname(__file__), "..", "roster.js"))
+
+def sync_firestore_roster():
+    try:
+        req = urllib.request.Request(FIRESTORE_URL, headers={"User-Agent": "Mozilla/5.0"})
+        with urllib.request.urlopen(req, timeout=15) as resp:
+            data = json.loads(resp.read().decode("utf-8"))
+        docs = data.get("documents", [])
+        if not docs:
+            return
+        members = []
+        for doc in docs:
+            f = doc.get("fields", {})
+            members.append({
+                "id": int(f.get("id", {}).get("integerValue", 0)),
+                "name": f.get("name", {}).get("stringValue", ""),
+                "whatsapp": f.get("whatsapp", {}).get("stringValue", ""),
+                "position": f.get("position", {}).get("stringValue", "Midfield"),
+                "paid": bool(f.get("paid", {}).get("booleanValue", False)),
+                "note": f.get("note", {}).get("stringValue", ""),
+                "date": f.get("date", {}).get("stringValue", "")
+            })
+        members.sort(key=lambda m: m["id"])
+        if not os.path.exists(ROSTER_PATH):
+            return
+        with open(ROSTER_PATH, "r", encoding="utf-8") as rf:
+            roster_content = rf.read()
+        members_json = json.dumps(members, indent=4)
+        updated_roster = re.sub(
+            r"const DEFAULT_MEMBERS = \[[\s\S]*?\];",
+            f"const DEFAULT_MEMBERS = {members_json};",
+            roster_content,
+            count=1
+        )
+        if updated_roster != roster_content:
+            with open(ROSTER_PATH, "w", encoding="utf-8") as wf:
+                wf.write(updated_roster)
+            print(f"Backed up {len(members)} Firestore registrations to roster.js!")
+    except Exception as e:
+        print("Firestore backup skipped (keep existing roster.js snapshot):", e)
+
 if __name__ == "__main__":
     sync()
+    sync_firestore_roster()

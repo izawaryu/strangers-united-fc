@@ -13,17 +13,62 @@ const SEASON_CONFIG = {
     captainPin: "2023"
 };
 
-// Initial roster: only Ryu is pre-listed as paid via Venmo.
-// All other players are added after registering.
+// Baseline roster synced from live Firestore database (strangers-fc-9fd65)
+// Serves as an offline/fallback backup if Firestore is ever unreachable.
 const DEFAULT_MEMBERS = [
     {
-        id: 1,
-        name: "Ryu",
-        whatsapp: "",
-        position: "Midfield",
-        paid: true,
-        note: "Paid Venmo",
-        date: "Oct 14, 2026"
+        "id": 1,
+        "name": "Ryu",
+        "whatsapp": "",
+        "position": "Midfield",
+        "paid": true,
+        "note": "Paid Venmo",
+        "date": "Oct 14, 2026"
+    },
+    {
+        "id": 1792021893047,
+        "name": "Tim Dannwolf",
+        "whatsapp": "908-675-6240",
+        "position": "Defense",
+        "paid": true,
+        "note": "Paid Venmo",
+        "date": "Oct 14, 2026"
+    },
+    {
+        "id": 1792071121654,
+        "name": "Deivys Teles",
+        "whatsapp": "8482036020",
+        "position": "Midfield",
+        "paid": true,
+        "note": "Venmo- 10/15",
+        "date": "Oct 15, 2026"
+    },
+    {
+        "id": 1792073059332,
+        "name": "Andrew Novicsky",
+        "whatsapp": "9738004332",
+        "position": "Midfield",
+        "paid": false,
+        "note": "Venmo pending",
+        "date": "Oct 15, 2026"
+    },
+    {
+        "id": 1792073470046,
+        "name": "Ali Tsaoys",
+        "whatsapp": "7326870803",
+        "position": "Defense",
+        "paid": false,
+        "note": "Venmo pending",
+        "date": "Oct 15, 2026"
+    },
+    {
+        "id": 1793646954854,
+        "name": "Carlos",
+        "whatsapp": "7325802595",
+        "position": "Midfield",
+        "paid": false,
+        "note": "Venmo",
+        "date": "Nov 2, 2026"
     }
 ];
 
@@ -34,7 +79,13 @@ function getStoredRegistrations() {
     if (raw) {
         try {
             const parsed = JSON.parse(raw);
-            if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+            if (Array.isArray(parsed) && parsed.length > 0) {
+                // If local storage only had the initial 1-player seed ("Ryu"), upgrade to latest DEFAULT_MEMBERS snapshot
+                if (parsed.length === 1 && parsed[0].name === "Ryu" && DEFAULT_MEMBERS.length > 1) {
+                    return DEFAULT_MEMBERS;
+                }
+                return parsed;
+            }
         } catch (e) {
             console.warn("Could not parse registrations from localStorage", e);
         }
