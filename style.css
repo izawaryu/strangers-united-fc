@@ -895,7 +895,7 @@ html, body {
    SEASON REGISTRATION & DUES MANAGEMENT STYLES
    ========================================================= */
 
-/* Home Section Registration Banner */
+/* Home Section Registration & Waiver Banners */
 .home-reg-banner {
     margin-top: 1rem;
     background: linear-gradient(135deg, #F8FAFC 0%, #EFF6FF 100%);
@@ -903,6 +903,19 @@ html, body {
     border-radius: var(--radius-lg);
     padding: 1.25rem;
     box-shadow: var(--shadow-sm);
+}
+
+.home-waiver-banner {
+    background: var(--white-pure);
+    border: 1.5px solid var(--slate-border);
+    border-radius: var(--radius-lg);
+    padding: 1.25rem;
+    box-shadow: var(--shadow-sm);
+}
+
+.waiver-badge {
+    background: #FEF3C7;
+    color: #92400E;
 }
 
 .home-reg-header h3 {
