@@ -3,7 +3,7 @@ import re
 import os
 import json
 
-URL = "https://gaacomplextintonfalls.ezleagues.ezfacility.com/leagues/480009/CSX-Fall-Men-40-IV-2026.aspx"
+URL = "https://gaacomplextintonfalls.ezleagues.ezfacility.com/leagues/482374/CSX-Winter-League-I-40-THURSDAY-D-III.aspx"
 LEAGUE_DATA_PATH = os.path.normpath(os.path.join(os.path.dirname(__file__), "..", "league_data.js"))
 
 def fetch_html():
@@ -119,9 +119,9 @@ def sync():
             print("Failed to parse standings or matches from EZFacility HTML.")
             return
 
-        js_content = f"""// CSX Fall Men 40+ IV 2026 - Official League Data (Auto-Synced from Capelli EZFacility)
+        js_content = f"""// CSX Winter League I 40+ THURSDAY D III - Official League Data (Auto-Synced from Capelli EZFacility)
 const LEAGUE_INFO = {{
-    name: "CSX Fall Men 40+ IV 2026",
+    name: "CSX Winter League I 40+ THURSDAY D III",
     division: "8 v 8 - Adult Soccer (Men's Over 40)",
     facility: "Capelli Sport Complex, Tinton Falls, NJ",
     ezfacility_url: "{URL}"
