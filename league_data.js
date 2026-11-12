@@ -122,7 +122,7 @@ const MATCHES_DATA = [
         "away": "STRANGERS UNITED",
         "score": "vs",
         "status": "Upcoming",
-        "venue": "Indoor 1AB",
+        "venue": "Indoor 3AB",
         "isClubMatch": true,
         "result": "Upcoming"
     },
