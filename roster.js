@@ -69,6 +69,15 @@ const DEFAULT_MEMBERS = [
         "paid": false,
         "note": "Venmo",
         "date": "Nov 2, 2026"
+    },
+    {
+        "id": 1794584200895,
+        "name": "Bobby Mander",
+        "whatsapp": "732-306-2835",
+        "position": "Midfield",
+        "paid": false,
+        "note": "venmo",
+        "date": "Nov 13, 2026"
     }
 ];
 
