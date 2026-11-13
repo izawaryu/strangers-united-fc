@@ -117,7 +117,7 @@ const MATCHES_DATA = [
     {
         "id": 1,
         "date": "Thu, Nov 12",
-        "time": "8:00 PM",
+        "time": "Result Pending",
         "home": "TBD +40",
         "away": "STRANGERS UNITED",
         "score": "vs",
