@@ -129,7 +129,7 @@ const MATCHES_DATA = [
     {
         "id": 2,
         "date": "Thu, Nov 12",
-        "time": "9:00 PM",
+        "time": "Result Pending",
         "home": "OLD MAN CITY +40",
         "away": "REAL SAN MIGUELITO",
         "score": "vs",
@@ -141,7 +141,7 @@ const MATCHES_DATA = [
     {
         "id": 3,
         "date": "Thu, Nov 12",
-        "time": "10:00 PM",
+        "time": "Result Pending",
         "home": "CASUAL WRECKS",
         "away": "OCEAN ALUMNI +40",
         "score": "vs",
@@ -153,7 +153,7 @@ const MATCHES_DATA = [
     {
         "id": 4,
         "date": "Thu, Nov 12",
-        "time": "10:00 PM",
+        "time": "Result Pending",
         "home": "JUVENTUS +40",
         "away": "OUT OF SHAPE ALL STARS",
         "score": "vs",
