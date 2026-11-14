@@ -66,7 +66,7 @@ const DEFAULT_MEMBERS = [
         "name": "Carlos",
         "whatsapp": "7325802595",
         "position": "Midfield",
-        "paid": false,
+        "paid": true,
         "note": "Venmo",
         "date": "Nov 2, 2026"
     },
@@ -75,7 +75,7 @@ const DEFAULT_MEMBERS = [
         "name": "Bobby Mander",
         "whatsapp": "732-306-2835",
         "position": "Midfield",
-        "paid": false,
+        "paid": true,
         "note": "venmo",
         "date": "Nov 13, 2026"
     }
