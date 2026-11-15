@@ -78,6 +78,15 @@ const DEFAULT_MEMBERS = [
         "paid": true,
         "note": "venmo",
         "date": "Nov 13, 2026"
+    },
+    {
+        "id": 1794689320103,
+        "name": "Mike Nahoum",
+        "whatsapp": "6463066966",
+        "position": "Forward / Striker",
+        "paid": true,
+        "note": "Paid via Venmo",
+        "date": "Nov 14, 2026"
     }
 ];
 
