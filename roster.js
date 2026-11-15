@@ -87,6 +87,15 @@ const DEFAULT_MEMBERS = [
         "paid": true,
         "note": "Paid via Venmo",
         "date": "Nov 14, 2026"
+    },
+    {
+        "id": 1794764127633,
+        "name": "Julian Fatovic",
+        "whatsapp": "9179818201",
+        "position": "Midfield",
+        "paid": false,
+        "note": "Paid via Venmo @RyuIzawa",
+        "date": "Nov 15, 2026"
     }
 ];
 
