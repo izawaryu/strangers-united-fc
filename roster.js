@@ -93,7 +93,7 @@ const DEFAULT_MEMBERS = [
         "name": "Julian Fatovic",
         "whatsapp": "9179818201",
         "position": "Midfield",
-        "paid": false,
+        "paid": true,
         "note": "Paid via Venmo @RyuIzawa",
         "date": "Nov 15, 2026"
     }
