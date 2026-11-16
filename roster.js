@@ -96,6 +96,33 @@ const DEFAULT_MEMBERS = [
         "paid": true,
         "note": "Paid via Venmo @RyuIzawa",
         "date": "Nov 15, 2026"
+    },
+    {
+        "id": 1794844745926,
+        "name": "Pacho",
+        "whatsapp": "8482991204",
+        "position": "Midfield",
+        "paid": false,
+        "note": "Venmo pending",
+        "date": "Nov 16, 2026"
+    },
+    {
+        "id": 1794844862837,
+        "name": "Arturo",
+        "whatsapp": "3476418652",
+        "position": "Midfield",
+        "paid": false,
+        "note": "Venmo pending",
+        "date": "Nov 16, 2026"
+    },
+    {
+        "id": 1794844862837,
+        "name": "Arturo",
+        "whatsapp": "3476418652",
+        "position": "Midfield",
+        "paid": false,
+        "note": "Venmo pending",
+        "date": "Nov 16, 2026"
     }
 ];
 
