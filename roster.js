@@ -114,15 +114,6 @@ const DEFAULT_MEMBERS = [
         "paid": false,
         "note": "Venmo pending",
         "date": "Nov 16, 2026"
-    },
-    {
-        "id": 1794844862837,
-        "name": "Arturo",
-        "whatsapp": "3476418652",
-        "position": "Midfield",
-        "paid": false,
-        "note": "Venmo pending",
-        "date": "Nov 16, 2026"
     }
 ];
 
