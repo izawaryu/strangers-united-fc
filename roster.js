@@ -48,7 +48,7 @@ const DEFAULT_MEMBERS = [
         "name": "Andrew Novicsky",
         "whatsapp": "9738004332",
         "position": "Midfield",
-        "paid": false,
+        "paid": true,
         "note": "Venmo pending",
         "date": "Oct 15, 2026"
     },
