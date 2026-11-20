@@ -10,6 +10,7 @@ service cloud.firestore {
                             && request.resource.data.name is string
                             && request.resource.data.name.size() > 0
                             && request.resource.data.name.size() <= 100
+                            && !(request.resource.data.name in ['Pacho', 'pacho', 'Arturo', 'arturo'])
                             && request.resource.data.paid is bool;
       allow delete: if true;
     }

@@ -199,6 +199,7 @@ function initRegistrationSection() {
 
 // Names permanently removed from the roster (prevents stale open browser tabs from re-uploading them)
 const PERMANENTLY_REMOVED_NAMES = ['pacho', 'arturo'];
+let hasRunInitialCleanup = false;
 
 // Live Multi-Device Cloud Sync with Firebase Firestore
 function initFirebaseSync() {
@@ -220,16 +221,15 @@ function initFirebaseSync() {
                 .onSnapshot((snapshot) => {
                     let remoteList = [];
                     const seenNames = new Set();
+                    const docsToPurge = [];
 
                     snapshot.forEach(doc => {
                         const data = doc.data() || {};
                         const cleanName = (data.name || '').trim().toLowerCase();
 
-                        // Auto-purge permanently removed names or duplicate documents in Firestore
+                        // Filter out permanently removed names or duplicate documents
                         if (PERMANENTLY_REMOVED_NAMES.includes(cleanName) || (cleanName && seenNames.has(cleanName))) {
-                            firestoreDb.collection('registrations_winter_2026').doc(doc.id).delete().catch(err => {
-                                console.warn("Auto-cleanup delete warning:", err);
-                            });
+                            docsToPurge.push(doc.id);
                             return;
                         }
 
@@ -238,6 +238,16 @@ function initFirebaseSync() {
                         }
                         remoteList.push({ _docId: doc.id, ...data });
                     });
+
+                    // Run cloud purge at most once per page load to avoid looping against any unrefreshed tab
+                    if (!hasRunInitialCleanup && docsToPurge.length > 0) {
+                        hasRunInitialCleanup = true;
+                        docsToPurge.forEach(docId => {
+                            firestoreDb.collection('registrations_winter_2026').doc(docId).delete().catch(err => {
+                                console.warn("Auto-cleanup delete warning:", err);
+                            });
+                        });
+                    }
 
                     // Seed default registration if remote database is completely empty
                     if (remoteList.length === 0 && DEFAULT_MEMBERS.length > 0 && snapshot.empty) {
