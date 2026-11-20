@@ -197,30 +197,8 @@ function initRegistrationSection() {
     initFirebaseSync();
 }
 
-// Helper: scan all possible local storage keys for players registered on this device
-function getLocalCandidatesForMigration() {
-    let candidates = [];
-    ['strangers_fc_registrations_v2', 'strangers_fc_registrations'].forEach(key => {
-        try {
-            const raw = localStorage.getItem(key);
-            if (raw) {
-                const list = JSON.parse(raw);
-                if (Array.isArray(list)) {
-                    list.forEach(p => {
-                        if (p && p.name && p.name.trim() !== '' && p.name.trim().toLowerCase() !== 'ryu') {
-                            if (!candidates.some(c => c.name.toLowerCase() === p.name.trim().toLowerCase())) {
-                                candidates.push(p);
-                            }
-                        }
-                    });
-                }
-            }
-        } catch (e) {
-            console.warn("Could not check local key", key, e);
-        }
-    });
-    return candidates;
-}
+// Names permanently removed from the roster (prevents stale open browser tabs from re-uploading them)
+const PERMANENTLY_REMOVED_NAMES = ['pacho', 'arturo'];
 
 // Live Multi-Device Cloud Sync with Firebase Firestore
 function initFirebaseSync() {
@@ -232,53 +210,44 @@ function initFirebaseSync() {
             firestoreDb = firebase.firestore();
             console.log("Connected to Firebase Firestore");
 
+            // Remove legacy pre-Firebase localStorage key so stale entries never linger
+            try {
+                localStorage.removeItem('strangers_fc_registrations');
+            } catch (e) {}
+
             firestoreDb.collection('registrations_winter_2026')
                 .orderBy('id', 'asc')
                 .onSnapshot((snapshot) => {
                     let remoteList = [];
+                    const seenNames = new Set();
+
                     snapshot.forEach(doc => {
-                        remoteList.push({ _docId: doc.id, ...doc.data() });
+                        const data = doc.data() || {};
+                        const cleanName = (data.name || '').trim().toLowerCase();
+
+                        // Auto-purge permanently removed names or duplicate documents in Firestore
+                        if (PERMANENTLY_REMOVED_NAMES.includes(cleanName) || (cleanName && seenNames.has(cleanName))) {
+                            firestoreDb.collection('registrations_winter_2026').doc(doc.id).delete().catch(err => {
+                                console.warn("Auto-cleanup delete warning:", err);
+                            });
+                            return;
+                        }
+
+                        if (cleanName) {
+                            seenNames.add(cleanName);
+                        }
+                        remoteList.push({ _docId: doc.id, ...data });
                     });
 
-                    // Seed default Ryu registration if remote database is empty
-                    if (remoteList.length === 0 && DEFAULT_MEMBERS.length > 0) {
+                    // Seed default registration if remote database is completely empty
+                    if (remoteList.length === 0 && DEFAULT_MEMBERS.length > 0 && snapshot.empty) {
                         DEFAULT_MEMBERS.forEach(m => {
                             firestoreDb.collection('registrations_winter_2026').add(m);
                         });
                         return;
                     }
 
-                    // Auto-migrate any prior registrations saved locally on this device before Firebase was enabled
-                    const localCandidates = getLocalCandidatesForMigration();
-                    localCandidates.forEach(localP => {
-                        const existsInCloud = remoteList.some(r => r.name.toLowerCase() === localP.name.trim().toLowerCase());
-                        if (!existsInCloud) {
-                            console.log(`Auto-uploading local registration for "${localP.name}" to Firebase`);
-                            firestoreDb.collection('registrations_winter_2026').add({
-                                id: localP.id || Date.now(),
-                                name: localP.name.trim(),
-                                whatsapp: localP.whatsapp || '',
-                                position: localP.position || 'Midfield',
-                                paid: Boolean(localP.paid),
-                                note: localP.note || '',
-                                date: localP.date || new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
-                            }).then(() => {
-                                console.log(`Successfully migrated "${localP.name}" to Firebase.`);
-                            }).catch(err => {
-                                console.error(`Failed to migrate "${localP.name}":`, err);
-                            });
-                        }
-                    });
-
-                    // Merge remote list with any pending local candidates so UI stays responsive
-                    let mergedList = [...remoteList];
-                    localCandidates.forEach(localP => {
-                        if (!mergedList.some(m => m.name.toLowerCase() === localP.name.trim().toLowerCase())) {
-                            mergedList.push(localP);
-                        }
-                    });
-
-                    saveStoredRegistrations(mergedList);
+                    saveStoredRegistrations(remoteList);
                     renderSeasonDuesTracker();
                     renderRegistrationRosterTable();
                 }, (error) => {
@@ -508,13 +477,22 @@ window.deleteRegistration = function(id) {
         return;
     }
 
-    const updated = list.filter(p => p.id !== id);
+    const targetNameLower = (player.name || '').trim().toLowerCase();
+    const matchingEntries = list.filter(p => p.id === id || (p.name || '').trim().toLowerCase() === targetNameLower);
+    const updated = list.filter(p => p.id !== id && (p.name || '').trim().toLowerCase() !== targetNameLower);
     saveStoredRegistrations(updated);
 
-    if (firestoreDb && player._docId) {
-        firestoreDb.collection('registrations_winter_2026').doc(player._docId).delete().catch(err => {
-            console.error("Firestore delete failed:", err);
+    if (firestoreDb) {
+        matchingEntries.forEach(entry => {
+            if (entry._docId) {
+                firestoreDb.collection('registrations_winter_2026').doc(entry._docId).delete().catch(err => {
+                    console.error("Firestore delete failed:", err);
+                });
+            }
         });
+        firestoreDb.collection('registrations_winter_2026').where('id', '==', id).get().then(snapshot => {
+            snapshot.forEach(doc => doc.ref.delete());
+        }).catch(() => {});
     }
 
     renderSeasonDuesTracker();

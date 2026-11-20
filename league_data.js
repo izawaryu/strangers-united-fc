@@ -189,7 +189,7 @@ const MATCHES_DATA = [
     {
         "id": 7,
         "date": "Thu, Nov 19",
-        "time": "9:00 PM",
+        "time": "Result Pending",
         "home": "OUT OF SHAPE ALL STARS",
         "away": "CASUAL WRECKS",
         "score": "vs",
@@ -201,7 +201,7 @@ const MATCHES_DATA = [
     {
         "id": 8,
         "date": "Thu, Nov 19",
-        "time": "9:00 PM",
+        "time": "Result Pending",
         "home": "OLD MAN CITY +40",
         "away": "STRANGERS UNITED",
         "score": "vs",

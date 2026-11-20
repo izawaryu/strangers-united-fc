@@ -96,37 +96,22 @@ const DEFAULT_MEMBERS = [
         "paid": true,
         "note": "Paid via Venmo @RyuIzawa",
         "date": "Nov 15, 2026"
-    },
-    {
-        "id": 1794844745926,
-        "name": "Pacho",
-        "whatsapp": "8482991204",
-        "position": "Midfield",
-        "paid": false,
-        "note": "Venmo pending",
-        "date": "Nov 16, 2026"
-    },
-    {
-        "id": 1794844862837,
-        "name": "Arturo",
-        "whatsapp": "3476418652",
-        "position": "Midfield",
-        "paid": false,
-        "note": "Venmo pending",
-        "date": "Nov 16, 2026"
-    },
-    {
-        "id": 1794844862837,
-        "name": "Arturo",
-        "whatsapp": "3476418652",
-        "position": "Midfield",
-        "paid": false,
-        "note": "Venmo pending",
-        "date": "Nov 16, 2026"
     }
 ];
 
 const REGISTRATIONS_STORAGE_KEY = 'strangers_fc_registrations_v2';
+const REMOVED_ROSTER_NAMES = ['pacho', 'arturo'];
+
+function sanitizeRegistrationsList(list) {
+    const seen = new Set();
+    return list.filter(p => {
+        if (!p || !p.name) return false;
+        const clean = p.name.trim().toLowerCase();
+        if (!clean || REMOVED_ROSTER_NAMES.includes(clean) || seen.has(clean)) return false;
+        seen.add(clean);
+        return true;
+    });
+}
 
 function getStoredRegistrations() {
     const raw = localStorage.getItem(REGISTRATIONS_STORAGE_KEY);
@@ -138,7 +123,11 @@ function getStoredRegistrations() {
                 if (parsed.length === 1 && parsed[0].name === "Ryu" && DEFAULT_MEMBERS.length > 1) {
                     return DEFAULT_MEMBERS;
                 }
-                return parsed;
+                const cleaned = sanitizeRegistrationsList(parsed);
+                if (cleaned.length !== parsed.length) {
+                    saveStoredRegistrations(cleaned);
+                }
+                return cleaned;
             }
         } catch (e) {
             console.warn("Could not parse registrations from localStorage", e);
@@ -148,7 +137,8 @@ function getStoredRegistrations() {
 }
 
 function saveStoredRegistrations(data) {
-    localStorage.setItem(REGISTRATIONS_STORAGE_KEY, JSON.stringify(data));
+    const cleaned = Array.isArray(data) ? sanitizeRegistrationsList(data) : data;
+    localStorage.setItem(REGISTRATIONS_STORAGE_KEY, JSON.stringify(cleaned));
 }
 
 function getActivePaidPlayers() {

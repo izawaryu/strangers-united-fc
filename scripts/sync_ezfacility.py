@@ -140,6 +140,7 @@ const MATCHES_DATA = {json.dumps(matches, indent=4)};
 
 FIRESTORE_URL = "https://firestore.googleapis.com/v1/projects/strangers-fc-9fd65/databases/(default)/documents/registrations_winter_2026"
 ROSTER_PATH = os.path.normpath(os.path.join(os.path.dirname(__file__), "..", "roster.js"))
+REMOVED_NAMES = {"pacho", "arturo"}
 
 def sync_firestore_roster():
     try:
@@ -150,11 +151,28 @@ def sync_firestore_roster():
         if not docs:
             return
         members = []
+        seen_names = set()
         for doc in docs:
+            doc_path = doc.get("name", "")
+            doc_id = doc_path.split("/")[-1] if doc_path else ""
             f = doc.get("fields", {})
+            player_name = f.get("name", {}).get("stringValue", "").strip()
+            clean_lower = player_name.lower()
+
+            if not clean_lower or clean_lower in REMOVED_NAMES or clean_lower in seen_names:
+                if doc_id:
+                    try:
+                        del_req = urllib.request.Request(f"{FIRESTORE_URL}/{doc_id}", method="DELETE", headers={"User-Agent": "Mozilla/5.0"})
+                        urllib.request.urlopen(del_req, timeout=10).close()
+                        print(f"Purged removed/duplicate Firestore entry: {player_name} ({doc_id})")
+                    except Exception:
+                        pass
+                continue
+
+            seen_names.add(clean_lower)
             members.append({
                 "id": int(f.get("id", {}).get("integerValue", 0)),
-                "name": f.get("name", {}).get("stringValue", ""),
+                "name": player_name,
                 "whatsapp": f.get("whatsapp", {}).get("stringValue", ""),
                 "position": f.get("position", {}).get("stringValue", "Midfield"),
                 "paid": bool(f.get("paid", {}).get("booleanValue", False)),
