@@ -165,7 +165,7 @@ const MATCHES_DATA = [
     {
         "id": 5,
         "date": "Thu, Nov 19",
-        "time": "7:00 PM",
+        "time": "Result Pending",
         "home": "TBD +40",
         "away": "JUVENTUS +40",
         "score": "vs",
@@ -177,7 +177,7 @@ const MATCHES_DATA = [
     {
         "id": 6,
         "date": "Thu, Nov 19",
-        "time": "8:00 PM",
+        "time": "Result Pending",
         "home": "REAL SAN MIGUELITO",
         "away": "OCEAN ALUMNI +40",
         "score": "vs",
